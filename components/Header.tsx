@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 const Header = () => {
   return (
-    <header className="w-full flex justify-center items-center border-b shadow-sm">
+    <header className="w-full fixed top-0 left flex justify-center items-center border-b shadow-sm">
       <div className="max-w-[1300px] w-full flex justify-between items-center p-4">
         <div className="flex flex-col justify-center items-center gap-2">
           <h1 className="font-bold text-black text-3xl">X|O</h1>
