@@ -28,7 +28,7 @@ export default function Home() {
     resetGame,
   } = useGameState();
   return (
-    <div className="w-full h-[100vh] flex flex-col gap-4 justify-center items-center">
+    <div className="w-full h-[100vh] flex flex-col gap-4 justify-center items-center mb-[50px]">
       <PlayersField />
       <GameInfo
         isDraw={isDraw}
