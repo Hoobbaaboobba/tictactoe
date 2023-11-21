@@ -37,19 +37,19 @@ const MobileMenu = () => {
   const pathname = usePathname().split("/");
 
   return (
-    <div className="w-full flex justify-center gap-6 items-center sm:hidden bg-white py-2 px-4 fixed border-t bottom-0 left-0">
+    <div className="w-full flex justify-center gap-5 items-center sm:hidden bg-white py-2 px-4 fixed border-t bottom-0 left-0">
       {Buttons.map((button, index) => (
         <div key={index} className="flex flex-col justify-center items-center">
           <Button
             size="icon"
-            variant={pathname[0] === `${button.href}` ? "default" : "ghost"}
+            variant={pathname[1] === `${button.href}` ? "default" : "ghost"}
             asChild
           >
             <Link href={`/${button.href}`}>{button.icon}</Link>
           </Button>
           <span
             className={`${
-              pathname[0] === `${button.href}` ? "mt-2" : ""
+              pathname[1] === `${button.href}` ? "mt-2" : ""
             } text-sm`}
           >
             {button.label}

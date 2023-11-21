@@ -4,7 +4,6 @@ import Cell from "@/components/Cell";
 import GameInfo from "@/components/GameInfo";
 import PlayersField from "@/components/PlayersField";
 import ResetButton from "@/components/ResetButton";
-import { Button } from "@/components/ui/button";
 import useGameState from "@/components/useGameState";
 export default function Home() {
   const renderSymbol = (cell: any) => (
@@ -28,7 +27,7 @@ export default function Home() {
     resetGame,
   } = useGameState();
   return (
-    <div className="w-full h-[100vh] flex flex-col gap-4 justify-center items-center mb-[50px]">
+    <div className="w-full flex flex-col gap-4 justify-center items-center overflow-y-auto">
       <PlayersField />
       <GameInfo
         isDraw={isDraw}
