@@ -37,7 +37,7 @@ const MobileMenu = () => {
   const pathname = usePathname().split("/");
 
   return (
-    <div className="w-full flex justify-center gap-8 items-center sm:hidden bg-white py-2 px-4 fixed border-t bottom-0 left-0">
+    <div className="w-full flex justify-center gap-6 items-center sm:hidden bg-white py-2 px-4 fixed border-t bottom-0 left-0">
       {Buttons.map((button, index) => (
         <div key={index} className="flex flex-col justify-center items-center">
           <Button
