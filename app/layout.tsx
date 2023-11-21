@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn("my-24", inter.className)}>
+      <body className={cn("py-24", inter.className)}>
         <Header />
         {children}
         <MobileMenu />

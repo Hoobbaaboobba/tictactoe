@@ -10,11 +10,11 @@ const Header = () => {
           <h1 className="font-bold text-black text-3xl">X|O</h1>
           <div className="w-10 h-1 bg-black"></div>
         </div>
-        <div className="hidden sm:block">
+        {/* <div className="hidden sm:block">
           <Button size="lg" className="text-lg">
             Играть
           </Button>
-        </div>
+        </div> */}
         <AccountItem />
       </div>
     </header>
