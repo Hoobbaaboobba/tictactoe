@@ -8,8 +8,13 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "X|O МГСУ",
+  title: "X|O МГCосУ",
   description: "Не на жизнь, а на смерть",
+  openGraph: {
+    title: "X|O МГCосУ",
+    description: "Не на жизнь, а на смерть",
+    url: "https://tictactoe-kappa-seven.vercel.app/",
+  },
 };
 
 export default function RootLayout({
