@@ -5,6 +5,7 @@ import GameInfo from "@/components/GameInfo";
 import PlayersField from "@/components/PlayersField";
 import ResetButton from "@/components/ResetButton";
 import useGameState from "@/components/useGameState";
+
 export default function Home() {
   const renderSymbol = (cell: any) => (
     <span
@@ -39,7 +40,7 @@ export default function Home() {
       />
       <div
         className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl ${
-          currentStep === SYMBOL_O ? "shadow-green-600" : "shadow-rose-600"
+          currentStep === SYMBOL_O ? "green-anim" : "red-anim"
         }`}
       >
         <div className="grid grid-cols-3">

@@ -19,6 +19,32 @@ body {
   max-width: 130px;
 }
 
+.green-anim {
+  animation: 1s infinite alternate greenAn;
+}
+
+.red-anim {
+  animation: 1s infinite alternate redAn;
+}
+
+@keyframes redAn {
+  0% {
+    box-shadow: rgba(225, 29, 72, 1) 0px 25px 50px -12px;
+  }
+  100% {
+    box-shadow: rgba(225, 29, 72, 0) 0px 25px 50px -12px;
+  }
+}
+
+@keyframes greenAn {
+  0% {
+    box-shadow: rgba(22, 163, 74, 1) 0px 25px 50px -12px;
+  }
+  100% {
+    box-shadow: rgba(22, 163, 74, 0) 0px 25px 50px -12px;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
