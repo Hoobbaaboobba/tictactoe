@@ -18,13 +18,18 @@ const ProfilePage = () => {
         />
         <div className="w-full px-4 z-20 flex gap-2 absolute -bottom-8 justify-center items-center">
           <div className="max-w-[1300px] w-full justify-between items-center flex gap-4">
-            <Image
-              src="https://github.com/shadcn.png"
-              alt="icon"
-              width={100}
-              height={100}
-              className="rounded-full"
-            />
+            <div className="rounded-full bg-white flex justify-center relative items-center">
+              <Image
+                src="https://github.com/shadcn.png"
+                alt="icon"
+                width={100}
+                height={100}
+                className="rounded-full z-20"
+              />
+              <h1 className="text-3xl absolute top-0 left-0 w-full h-full">
+                X|O
+              </h1>
+            </div>
             <div className="flex flex-col justify-start gap-2">
               <div className="w-full text-white rounded-sm">
                 <h1 className="text-2xl font-bold">Alexey Matveev 🏴‍☠️</h1>
@@ -45,10 +50,11 @@ const ProfilePage = () => {
       </div>
       <div className="max-w-[1300px] w-full mt-12 px-4 flex flex-col gap-2">
         <div className="flex flex-col gap-2">
-          <Skeleton className="w-full h-12" />
-          <Skeleton className="w-full h-12" />
-          <Skeleton className="w-full h-12" />
-          <Skeleton className="w-full h-12" />
+          <Skeleton className="w-full h-16" />
+          <Skeleton className="w-full h-16" />
+          <Skeleton className="w-full h-16" />
+          <Skeleton className="w-full h-16" />
+          <Skeleton className="w-full h-16" />
         </div>
       </div>
     </div>
