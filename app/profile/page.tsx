@@ -26,7 +26,7 @@ const ProfilePage = () => {
                 height={100}
                 className="rounded-full z-20"
               />
-              <h1 className="text-3xl absolute top-0 left-0 w-full h-full justify-center items-center">
+              <h1 className="text-3xl absolute top-8 left-8 w-full h-full justify-center items-center">
                 X|O
               </h1>
             </div>
