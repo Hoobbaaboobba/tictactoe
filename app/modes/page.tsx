@@ -1,10 +1,26 @@
-"use client";
-
-import { usePathname } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ModesPage = () => {
-  const pathname = usePathname().split("/");
-  return <div className="mt-20">{pathname[1]}</div>;
+  return (
+    <div className="w-full flex justify-center items-center">
+      <div className="max-w-[1300px] w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-4">
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+        <Skeleton className="h-[250px]" />
+      </div>
+    </div>
+  );
 };
 
 export default ModesPage;
