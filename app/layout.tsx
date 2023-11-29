@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import MobileMenu from "@/components/MobileMenu";
 import { cn } from "@/lib/utils";
+import AuthProvider from "./context/AuthProvider";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,9 +27,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn("py-24", inter.className)}>
-        <Header />
-        {children}
-        <MobileMenu />
+        <AuthProvider>
+          {/* <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          > */}
+          <Header />
+          {children}
+          <MobileMenu />
+          {/* </ThemeProvider> */}
+        </AuthProvider>
       </body>
     </html>
   );
