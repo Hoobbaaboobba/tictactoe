@@ -4,8 +4,10 @@ import "./globals.css";
 import Header from "@/components/Header";
 import MobileMenu from "@/components/MobileMenu";
 import { cn } from "@/lib/utils";
-import AuthProvider from "./context/AuthProvider";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "@/components/theme-provider";
+import SupabaseProvider from "@/providers/SupabaseProvider";
+import UserProvider from "@/providers/UserProvider";
+import ModalProvider from "@/providers/ModalProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,20 +27,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <body className={cn("py-24", inter.className)}>
-        <AuthProvider>
-          {/* <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          > */}
-          <Header />
-          {children}
-          <MobileMenu />
-          {/* </ThemeProvider> */}
-        </AuthProvider>
+        <SupabaseProvider>
+          <UserProvider>
+            <ModalProvider />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Header />
+              {children}
+              <MobileMenu />
+            </ThemeProvider>
+          </UserProvider>
+        </SupabaseProvider>
       </body>
     </html>
   );

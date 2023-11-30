@@ -18,7 +18,7 @@ type Props = {
   pagetype: string;
 };
 
-const ProfileComponent = ({ user, pagetype }: Props) => {
+const ProfileComponent = () => {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <div className="w-full h-[200px] relative -mt-4">
@@ -34,7 +34,7 @@ const ProfileComponent = ({ user, pagetype }: Props) => {
           <div className="max-w-[1300px] w-full justify-between items-center flex gap-4">
             <div className="rounded-full bg-white flex justify-center relative items-center">
               <Image
-                src={user?.image || "https://github.com/shadcn.png"}
+                src={"https://github.com/shadcn.png"}
                 alt="icon"
                 width={100}
                 height={100}
@@ -46,7 +46,7 @@ const ProfileComponent = ({ user, pagetype }: Props) => {
             </div>
             <div className="flex flex-col justify-start gap-2">
               <div className="w-full text-white rounded-sm">
-                <h1 className="text-2xl font-bold">{user?.name} 🏴‍☠️</h1>
+                <h1 className="text-2xl font-bold">Alex 🏴‍☠️</h1>
                 <p className="opacity-60">С нами с 23 ноября 2023 года</p>
               </div>
               <div className="bg-transparent w-full flex justify-betweem items-center gap-1 rounded-sm">

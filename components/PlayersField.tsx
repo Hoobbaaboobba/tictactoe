@@ -17,7 +17,7 @@ const PlayersField = () => {
     return () => clearInterval(interval);
   }, [time]);
   return (
-    <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-8 items-center border-2 border-black p-4 rounded-2xl shadow-lg mb-4">
+    <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-8 items-center border-2 dark:bg-slate-900 border-black p-4 rounded-2xl shadow-lg mb-4">
       <div className="flex gap-6 justify-center items-center">
         <div className="flex gap-4 justify-center items-center">
           <Avatar>

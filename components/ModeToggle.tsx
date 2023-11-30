@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { Monitor, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
@@ -25,14 +25,29 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Светлая
+        <DropdownMenuItem
+          onClick={() => setTheme("light")}
+          className="flex gap-2"
+        >
+          <Button variant="ghost" size="mode" className="flex gap-2">
+            <SunIcon className="h-[1.2rem] w-[1.2rem]" /> Светлая
+          </Button>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Тёмнае
+        <DropdownMenuItem
+          onClick={() => setTheme("dark")}
+          className="flex gap-2"
+        >
+          <Button variant="ghost" size="mode" className="flex gap-2">
+            <MoonIcon className="h-[1.2rem] w-[1.2rem]" /> Тёмная
+          </Button>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          Система
+        <DropdownMenuItem
+          onClick={() => setTheme("system")}
+          className="flex gap-2"
+        >
+          <Button variant="ghost" size="mode" className="flex gap-2">
+            <Monitor className="h-[1.2rem] w-[1.2rem]" /> Система
+          </Button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

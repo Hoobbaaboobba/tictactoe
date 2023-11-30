@@ -39,7 +39,7 @@ export default function Home() {
         winnerSymbol={winnerSymbol}
       />
       <div
-        className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl ${
+        className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900 ${
           currentStep === SYMBOL_O ? "green-anim" : "red-anim"
         }`}
       >

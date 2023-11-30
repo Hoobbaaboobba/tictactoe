@@ -12,7 +12,7 @@ const Cell = ({ handleClick, isWinner, cell, renderSymbol, index }: Props) => {
       onClick={() => handleClick(index)}
       className={`${
         isWinner && "bg-green-100"
-      } w-16 h-16 border border-black flex justify-center items-center text-4xl`}
+      } w-16 h-16 border dark:border-white border-black flex justify-center items-center text-4xl`}
     >
       {cell ? renderSymbol(cell) : null}
     </button>
