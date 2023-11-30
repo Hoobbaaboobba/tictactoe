@@ -26,7 +26,7 @@ const Modal = ({
   return (
     <Dialog open={isOpen} defaultOpen={isOpen} onOpenChange={onChange}>
       <DialogOverlay className="dark:bg-neutral-900/90 bg-white/90 backdrop-blur-sm" />
-      <DialogContent className="max-w-[600px] w-full text-center flex flex-col justify-center items-center">
+      <DialogContent className="max-w-[350px] md:max-w-[600px] w-full text-center flex flex-col justify-center items-center">
         <DialogHeader className="w-full text-center">
           <DialogTitle className="">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
