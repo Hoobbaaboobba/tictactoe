@@ -1,11 +1,7 @@
 "use client";
 
-import useAuthModal from "@/hooks/useAuthModal";
 import AccountItem from "./AccountItem";
 import { ModeToggle } from "./ModeToggle";
-import { useRouter } from "next/navigation";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useUser } from "@/hooks/useUser";
 
 const Header = () => {
   return (
