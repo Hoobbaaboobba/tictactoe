@@ -129,7 +129,7 @@ const LeadersPage = async () => {
                 </Avatar>
               </TableCell>
               <TableCell className="max-w-[130px] text-center text-ellipsis overflow-x-hidden whitespace-nowrap">
-                {player.firstName ? player.firstName : "LORD"}
+                {player.firstName}
               </TableCell>
               <TableCell className="text-center">{}</TableCell>
               <TableCell className="text-center">{index}</TableCell>
