@@ -17,7 +17,11 @@ export const SignInOAuthButtons = () => {
   };
   return (
     <div>
-      <Button size="icon" onClick={() => signInWith("oauth_google")}>
+      <Button
+        size="icon"
+        variant="outline"
+        onClick={() => signInWith("oauth_google")}
+      >
         <Chrome />
       </Button>
     </div>

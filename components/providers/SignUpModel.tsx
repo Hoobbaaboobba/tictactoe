@@ -5,6 +5,7 @@ import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export default function SignUpModel() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -74,24 +75,32 @@ export default function SignUpModel() {
   // Once the sign-up form was submitted, verifying was set to true and as a result, this verification form is presented to the user to input their verification code.
   if (verifying) {
     return (
-      <form onSubmit={handleVerify}>
-        <label id="code">Code</label>
-        <input
+      <form
+        onSubmit={handleVerify}
+        className="flex w-[400px] border-2 dark:border-white flex-col gap-4 shadow-md rounded-md p-8 justify-center items-center my-8"
+      >
+        <h1 className="text-center">
+          Мы отправили вам на почту код подтверждения
+        </h1>
+        <Input
           value={code}
           id="code"
           name="code"
           onChange={(e) => setCode(e.target.value)}
+          placeholder="Код"
         />
-        <button type="submit">Завершить регистрацию</button>
+        <Button type="submit" className="w-full">
+          Завершить регистрацию
+        </Button>
       </form>
     );
   }
 
   return (
     <div className="py-8">
-      <form className="flex flex-col gap-4 shadow-md rounded-md p-8 justify-center items-center">
+      <form className="flex w-[400px] border-2 dark:border-white flex-col gap-4 shadow-md rounded-md p-8 justify-center items-center">
         <h1 className="text-2xl text-center font-bold">Зарегистрируйся!</h1>
-        <div>
+        <div className="w-full">
           <Input
             onChange={(e) => setEmailAddress(e.target.value)}
             id="email"
@@ -100,16 +109,22 @@ export default function SignUpModel() {
             placeholder="Почта"
           />
         </div>
-        <div>
+        <div className="w-full">
           <Input
             onChange={(e) => setPassword(e.target.value)}
             id="password"
             name="password"
             type="password"
             placeholder="Пароль"
+            className="w-full"
           />
         </div>
-        <Button onClick={handleSubmit}>Войти</Button>
+        <Button onClick={handleSubmit} className="w-full">
+          Войти
+        </Button>
+        <Link href="/sign-in" className="text-sm">
+          Уже есть аккаунт?
+        </Link>
       </form>
     </div>
   );

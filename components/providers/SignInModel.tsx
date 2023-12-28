@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { SignInOAuthButtons } from "./GoogleProvider";
+import Link from "next/link";
 
 export default function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
@@ -39,11 +40,11 @@ export default function SignInForm() {
   };
   return (
     <div className="py-8">
-      <form className="flex flex-col gap-4 shadow-md rounded-md p-8 justify-center items-center">
+      <form className="flex border-2 dark:border-white w-[400px] flex-col gap-4 shadow-md rounded-md p-8 justify-center items-center">
         <h1 className="text-2xl text-center font-bold">
           Снова рад тебя <br /> видеть!
         </h1>
-        <div>
+        <div className="w-full">
           <Input
             onChange={(e) => setEmailAddress(e.target.value)}
             id="email"
@@ -52,7 +53,7 @@ export default function SignInForm() {
             placeholder="Почта"
           />
         </div>
-        <div>
+        <div className="w-full">
           <Input
             onChange={(e) => setPassword(e.target.value)}
             id="password"
@@ -61,8 +62,13 @@ export default function SignInForm() {
             placeholder="Пароль"
           />
         </div>
-        <div className="flex justify-between items-center w-full">
-          <Button onClick={handleSubmit}>Войти</Button>
+        <Button onClick={handleSubmit} className="w-full">
+          Войти
+        </Button>
+        <div className="w-full flex justify-center items-center gap-3">
+          <Link href="/sign-up" className="text-sm">
+            Нет аккаунта?
+          </Link>
           <SignInOAuthButtons />
         </div>
       </form>
