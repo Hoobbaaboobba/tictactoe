@@ -7,12 +7,16 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { SignInOAuthButtons } from "./GoogleProvider";
 import Link from "next/link";
+import { Loader } from "lucide-react";
 
 export default function SignInForm() {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   // start the sign In process.
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -21,21 +25,27 @@ export default function SignInForm() {
     }
 
     try {
-      const result = await signIn.create({
-        identifier: emailAddress,
-        password,
-      });
+      setTimeout(async () => {
+        const result = await signIn.create({
+          identifier: emailAddress,
+          password,
+        });
 
-      if (result.status === "complete") {
-        console.log(result);
-        await setActive({ session: result.createdSessionId });
-        router.push("/");
-      } else {
-        /*Investigate why the login hasn't completed */
-        console.log(result);
-      }
+        setIsLoading(true);
+
+        if (result.status === "complete") {
+          console.log(result);
+          await setActive({ session: result.createdSessionId });
+          router.push("/");
+        } else {
+          /*Investigate why the login hasn't completed */
+          console.log(result);
+        }
+      }, 1000);
     } catch (err: any) {
       console.error("error", err.errors[0].longMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -62,8 +72,8 @@ export default function SignInForm() {
             placeholder="Пароль"
           />
         </div>
-        <Button onClick={handleSubmit} className="w-full">
-          Войти
+        <Button disabled={isLoading} onClick={handleSubmit} className="w-full">
+          {isLoading ? <Loader /> : "Войти"}
         </Button>
         <div className="w-full flex justify-center items-center gap-3">
           <Link href="/sign-up" className="text-sm">

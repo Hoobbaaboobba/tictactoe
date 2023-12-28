@@ -16,14 +16,12 @@ export const SignInOAuthButtons = () => {
     });
   };
   return (
-    <div>
-      <Button
-        size="icon"
-        variant="outline"
-        onClick={() => signInWith("oauth_google")}
-      >
-        <Chrome />
-      </Button>
-    </div>
+    <Button
+      size="icon"
+      variant="outline"
+      onClick={() => signInWith("oauth_google")}
+    >
+      <Chrome />
+    </Button>
   );
 };

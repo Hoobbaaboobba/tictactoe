@@ -6,7 +6,7 @@ import MobileMenu from "@/components/MobileMenu";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, auth, clerkClient, currentUser } from "@clerk/nextjs";
 
 const inter = Inter({ subsets: ["latin"] });
 

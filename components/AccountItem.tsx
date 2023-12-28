@@ -1,17 +1,5 @@
-import { UserButton } from "@clerk/nextjs";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Button } from "./ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-
-const AccountItem = () => {
-  const userId = "my-user-id";
+import { UserButton, auth, clerkClient, currentUser } from "@clerk/nextjs";
+const AccountItem = async () => {
   return (
     <>
       <UserButton afterSignOutUrl="/" />
