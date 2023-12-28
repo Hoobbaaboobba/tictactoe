@@ -4,6 +4,8 @@ import { LogOut } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { currentUser } from "@clerk/nextjs";
 
+export const revalidate = 60;
+
 const ProfileComponent = async () => {
   const user = await currentUser();
 
