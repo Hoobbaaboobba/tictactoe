@@ -39,6 +39,7 @@ export default function SignInForm() {
           router.push("/");
         } else {
           /*Investigate why the login hasn't completed */
+          setError(true);
           console.log(result);
         }
       }, 1000);
@@ -73,7 +74,7 @@ export default function SignInForm() {
           />
         </div>
         <Button disabled={isLoading} onClick={handleSubmit} className="w-full">
-          {isLoading ? <Loader /> : "Войти"}
+          {isLoading ? <Loader className="transition animate-spin" /> : "Войти"}
         </Button>
         <div className="w-full flex justify-center items-center gap-3">
           <Link href="/sign-up" className="text-sm">
@@ -81,6 +82,7 @@ export default function SignInForm() {
           </Link>
           <SignInOAuthButtons />
         </div>
+        <p>{error && "Неверная почта или пароль"}</p>
       </form>
     </div>
   );
