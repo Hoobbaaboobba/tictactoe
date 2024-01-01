@@ -5,8 +5,8 @@ import Header from "@/components/Header";
 import MobileMenu from "@/components/MobileMenu";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-
-import { ClerkProvider, auth, clerkClient, currentUser } from "@clerk/nextjs";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,13 +20,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
   return (
-    <ClerkProvider>
+    <SessionProvider session={session}>
       <html lang="ru">
         <body className={cn("py-24", inter.className)}>
           <ThemeProvider
@@ -41,6 +43,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </SessionProvider>
   );
 }

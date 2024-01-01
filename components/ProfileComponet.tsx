@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { currentUser } from "@clerk/nextjs";
-
-export const revalidate = 60;
+import { currentUser } from "@/lib/auth";
+import { LogOutButton } from "./auth/LogOutButton";
+import { Badge } from "./ui/badge";
+import { profile } from "@/actions/profile";
+import TwoFactorButton from "./auth/TwoFactorButton";
 
 const ProfileComponent = async () => {
   const user = await currentUser();
@@ -22,37 +22,58 @@ const ProfileComponent = async () => {
         />
         <div className="w-full px-4 z-20 flex gap-2 absolute -bottom-8 justify-center items-center">
           <div className="max-w-[1300px] w-full justify-between items-center flex gap-4">
-            <div className="rounded-full bg-white flex justify-center relative items-center">
-              {}
+            <div className="rounded-full flex justify-center relative items-center">
+              <Image
+                src={user?.image || "https://github.com/shadcn.png"}
+                alt="profile icon"
+                width={100}
+                height={100}
+                className={`${
+                  user?.role === "GOD" && "border-2 border-yellow-300"
+                } z-20 rounded-full`}
+              />
               <h1 className="text-3xl absolute top-8 left-8 w-full h-full justify-center items-center">
                 X|O
               </h1>
             </div>
             <div className="flex flex-col justify-start gap-2">
               <div className="w-full text-white rounded-sm">
-                <h1 className="text-2xl font-bold">{user?.firstName} 🏴‍☠️</h1>
-                <p className="opacity-60">С нами с {user?.createdAt}</p>
+                <h1 className="text-2xl font-bold">{user?.name} 🏴‍☠️</h1>
+                <p className="opacity-60">С нами с 23 ноября 2023 года</p>
               </div>
               <div className="bg-transparent w-full flex justify-betweem items-center gap-1 rounded-sm">
                 <Button variant="outline" className="">
                   Обзор
                 </Button>
                 <Button variant="outline">Статистика</Button>
-                <Button variant="destructive" size="icon">
-                  <LogOut />
-                </Button>
+                <LogOutButton />
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="max-w-[1300px] w-full mt-12 px-4 flex flex-col gap-2">
-        <div className="flex flex-col gap-2">
-          <Skeleton className="w-full h-16" />
-          <Skeleton className="w-full h-16" />
-          <Skeleton className="w-full h-16" />
-          <Skeleton className="w-full h-16" />
-          <Skeleton className="w-full h-16" />
+        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+          <p className="text-sm font-medium">ID</p>
+          <p className="truncate text-sm max-w-[180px] font-mono p-1 bg-slate-100 dark:bg-transparent dark:border rounded-md">
+            {user?.id}
+          </p>
+        </div>{" "}
+        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+          <p className="text-sm font-medium">Имя</p>
+          <p className="truncate text-sm max-w-[180px] font-mono p-1 bg-slate-100 dark:bg-transparent dark:border rounded-md">
+            {user?.name}
+          </p>
+        </div>
+        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+          <p className="text-sm font-medium">Почта</p>
+          <p className="truncate text-sm max-w-[180px] font-mono p-1 bg-slate-100 dark:bg-transparent dark:border rounded-md">
+            {user?.email}
+          </p>
+        </div>
+        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+          <p className="text-sm font-medium">Двухфакторная аутентификация</p>
+          <TwoFactorButton isTwoFactor={user?.isTwoFactorEnabled || false} />
         </div>
       </div>
     </div>
