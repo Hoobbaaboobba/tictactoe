@@ -44,7 +44,9 @@ const PlayersField = ({ players }: Props) => {
       <div className="flex gap-6 justify-center items-center">
         <div className="flex gap-4 justify-center items-center">
           <Avatar>
-            <AvatarImage src={"https://github.com/shadcn.png"} />
+            <AvatarImage
+              src={players[0].image || "https://github.com/shadcn.png"}
+            />
             <AvatarFallback>X|O</AvatarFallback>
           </Avatar>
           <div className="">
@@ -64,7 +66,9 @@ const PlayersField = ({ players }: Props) => {
           <>
             <div className="flex gap-4 justify-center items-center">
               <Avatar>
-                <AvatarImage src={"https://github.com/shadcn.png"} />
+                <AvatarImage
+                  src={players[1].image || "https://github.com/shadcn.png"}
+                />
                 <AvatarFallback>X|O</AvatarFallback>
               </Avatar>
               <div className="">
