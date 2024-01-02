@@ -1,6 +1,7 @@
 import { currentUser } from "@/lib/auth";
 import AccountItem from "./AccountItem";
 import { ModeToggle } from "./ModeToggle";
+import { SocketIndicator } from "./providers/SocketIndicator";
 
 const Header = async () => {
   const user = await currentUser();
@@ -15,6 +16,7 @@ const Header = async () => {
             }`}
           ></div>
         </div>
+        <SocketIndicator />
         <div className="flex justify-center items-center gap-4">
           <AccountItem />
           <ModeToggle />

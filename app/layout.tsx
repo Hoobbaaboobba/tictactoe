@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { SocketProvider } from "@/components/providers/SocketProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,9 +38,11 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            {children}
-            <MobileMenu />
+            <SocketProvider>
+              <Header />
+              {children}
+              <MobileMenu />
+            </SocketProvider>
           </ThemeProvider>
         </body>
       </html>

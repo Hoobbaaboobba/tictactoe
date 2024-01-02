@@ -27,6 +27,52 @@ model User {
   accounts      Account[]
   isTwoFactorEnabled Boolean @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
+
+  playgrounds TicTacToePlayGround[]
+  players Player[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TicTacToeTeam {
+  CIRCLE
+  CROSS
+}
+
+model TicTacToePlayGround {
+  id String @id @default(uuid())
+  inviteCode String @unique
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  players Player[]
+
+  created DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Player {
+  id String @id @default(uuid())
+  team TicTacToeTeam @default(CROSS)
+  name String?
+  image String?
+  points  Int?
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  playGroundId String
+  playgrounds TicTacToePlayGround @relation(fields: [playGroundId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([playGroundId])
 }
 
 model Account {
