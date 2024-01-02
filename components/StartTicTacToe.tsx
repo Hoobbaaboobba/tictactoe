@@ -29,7 +29,7 @@ const TicTacToePlayGround = ({ playGroundId, inviteCode }: Props) => {
   const [copied, setCopied] = useState(false);
   const router = useRouter();
 
-  const inviteUrl = `http://localhost:3000/invite/${inviteCode}`;
+  const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/invite/${inviteCode}`;
 
   const onMakeRoom = () => {
     startTransition(() => {
