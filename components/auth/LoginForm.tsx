@@ -27,7 +27,7 @@ import Link from "next/link";
 export const LoginForm = () => {
   const searchParams = useSearchParams();
   const urlError =
-    searchParams.get("error") === "OAuthAccountNotLinked"
+    searchParams?.get("error") === "OAuthAccountNotLinked"
       ? "Эта почта уже использована другим провайдером"
       : "";
 
