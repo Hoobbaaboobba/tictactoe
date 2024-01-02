@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { redirect } from "next/navigation";
 import { ScaleLoader } from "react-spinners";
+import { Crown, GraduationCap } from "lucide-react";
 
 interface Props {
   players:
     | {
         id: string;
         team: "CROSS" | "CIRCLE";
+        role: "GOD" | "ADMIN" | "PLAYER";
         name: string | null;
         image: string | null;
         points: number | null;
@@ -42,7 +44,13 @@ const PlayersField = ({ players }: Props) => {
   return (
     <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-8 items-center border-2 dark:bg-slate-900 border-black p-4 rounded-2xl shadow-lg mb-4">
       <div className="flex gap-6 justify-center items-center">
-        <div className="flex gap-4 justify-center items-center">
+        <div className="flex relative gap-4 justify-center items-center">
+          {players[0].role === "GOD" && (
+            <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
+          )}
+          {players[0].role === "ADMIN" && (
+            <GraduationCap className="absolute -top-[20px] left-2 text-black" />
+          )}
           <Avatar>
             <AvatarImage
               src={players[0].image || "https://github.com/shadcn.png"}
@@ -64,7 +72,13 @@ const PlayersField = ({ players }: Props) => {
       <div className="flex gap-6 justify-center items-center">
         {players[1] ? (
           <>
-            <div className="flex gap-4 justify-center items-center">
+            <div className="flex relative gap-4 justify-center items-center">
+              {players[0].role === "GOD" && (
+                <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
+              )}
+              {players[0].role === "ADMIN" && (
+                <GraduationCap className="absolute -top-[20px] left-2 text-black" />
+              )}
               <Avatar>
                 <AvatarImage
                   src={players[1].image || "https://github.com/shadcn.png"}

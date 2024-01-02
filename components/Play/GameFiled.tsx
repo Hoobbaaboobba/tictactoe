@@ -1,17 +1,21 @@
 "use client";
 
+import { exitGame } from "@/actions/startGame";
 import Cell from "@/components/Cell";
 import GameInfo from "@/components/GameInfo";
 import PlayersField from "@/components/PlayersField";
 import ResetButton from "@/components/ResetButton";
 import useGameState from "@/components/useGameState";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { startTransition } from "react";
+import { Button } from "../ui/button";
 
 interface Props {
   players:
     | {
         id: string;
         team: "CROSS" | "CIRCLE";
+        role: "GOD" | "ADMIN" | "PLAYER";
         name: string | null;
         image: string | null;
         points: number | null;
@@ -44,6 +48,15 @@ export const GameFiled = ({ players }: Props) => {
     handleClick,
     resetGame,
   } = useGameState();
+
+  const router = useRouter();
+
+  const onDeleteRoom = () => {
+    startTransition(() => {
+      exitGame();
+      router.refresh();
+    });
+  };
 
   if (players === undefined) {
     return redirect("/play");
@@ -90,6 +103,9 @@ export const GameFiled = ({ players }: Props) => {
           />
         </>
       )}
+      <Button type="submit" onSubmit={onDeleteRoom} variant="destructive">
+        Покинуть комнату
+      </Button>
     </div>
   );
 };

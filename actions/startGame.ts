@@ -22,12 +22,36 @@ export const startGame = async () => {
         players: {
           create: [
             {
+              image: user.image,
               name: user.name,
               userId: user.id,
+              role: user.role,
               team: TicTacToeTeam.CIRCLE,
             },
           ],
         },
+      },
+    });
+
+    return playground;
+  } catch {
+    return { error: "Что-то пошло не так!" };
+  }
+};
+
+export const exitGame = async () => {
+  try {
+    const user = await currentUser();
+    const expires = new Date(new Date().getTime() + 3600 * 1000);
+
+    if (!user) {
+      return null;
+    }
+
+    const playground = await db.ticTacToePlayGround.delete({
+      where: {
+        userId: user.id,
+        inviteCode: uuidv4(),
       },
     });
 

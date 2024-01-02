@@ -123,7 +123,7 @@ const TicTacToePlayGround = ({ playGroundId, inviteCode }: Props) => {
                 {isPending ? (
                   <ScaleLoader color="#ffffff" height={20} width={3} />
                 ) : (
-                  "Играть"
+                  "Создать"
                 )}
               </Button>
             </CardFooter>

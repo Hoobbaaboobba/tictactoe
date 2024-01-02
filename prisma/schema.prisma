@@ -61,6 +61,7 @@ model Player {
   name String?
   image String?
   points  Int?
+  role UserRole @default(PLAYER)
 
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
