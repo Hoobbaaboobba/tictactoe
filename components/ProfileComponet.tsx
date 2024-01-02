@@ -90,8 +90,8 @@ const ProfileComponent = async () => {
           <p
             className={`truncate text-sm max-w-[180px] font-mono p-1 ${
               user?.role === "ADMIN" && "bg-emerald-500 text-white"
-            } ${
-              user?.role === "GOD" && "bg-yellow-400 text-white"
+            } ${user?.role === "GOD" && "bg-yellow-400 text-white"} ${
+              user?.role === "PLAYER" && "bg-slate-100"
             } dark:bg-transparent dark:border rounded-md`}
           >
             {user?.role}
