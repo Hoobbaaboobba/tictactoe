@@ -10,7 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import { currentUser } from "@/lib/auth";
 import { LogOutButton } from "./auth/LogOutButton";
-import { Crown } from "lucide-react";
+import { Crown, GraduationCap } from "lucide-react";
 
 const AccountItem = async () => {
   const user = await currentUser();
@@ -21,8 +21,12 @@ const AccountItem = async () => {
         <DropdownMenuTrigger>
           <div className="flex gap-4 justify-center items-center">
             <div className="relative">
-              {user?.role === "GOD" && (
+              {user?.role === "GOD" ? (
                 <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
+              ) : user?.role === "ADMIN" ? (
+                <GraduationCap className="absolute -top-[20px] left-2 text-black" />
+              ) : (
+                ""
               )}
               <Avatar>
                 <AvatarImage

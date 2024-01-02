@@ -2,8 +2,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/auth";
 import { LogOutButton } from "./auth/LogOutButton";
-import { Badge } from "./ui/badge";
-import { profile } from "@/actions/profile";
 import TwoFactorButton from "./auth/TwoFactorButton";
 
 const ProfileComponent = async () => {
@@ -53,28 +51,62 @@ const ProfileComponent = async () => {
         </div>
       </div>
       <div className="max-w-[1300px] w-full mt-12 px-4 flex flex-col gap-2">
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+        <div
+          className={`flex flex-row items-center justify-between rounded-lg border ${
+            user?.role === "GOD" && "border-yellow-400"
+          } p-3 shadow-sm`}
+        >
           <p className="text-sm font-medium">ID</p>
           <p className="truncate text-sm max-w-[180px] font-mono p-1 bg-slate-100 dark:bg-transparent dark:border rounded-md">
             {user?.id}
           </p>
         </div>{" "}
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+        <div
+          className={`flex flex-row items-center justify-between rounded-lg border ${
+            user?.role === "GOD" && "border-yellow-400"
+          } p-3 shadow-sm`}
+        >
           <p className="text-sm font-medium">Имя</p>
           <p className="truncate text-sm max-w-[180px] font-mono p-1 bg-slate-100 dark:bg-transparent dark:border rounded-md">
             {user?.name}
           </p>
         </div>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+        <div
+          className={`flex flex-row items-center justify-between rounded-lg border ${
+            user?.role === "GOD" && "border-yellow-400"
+          } p-3 shadow-sm`}
+        >
           <p className="text-sm font-medium">Почта</p>
           <p className="truncate text-sm max-w-[180px] font-mono p-1 bg-slate-100 dark:bg-transparent dark:border rounded-md">
             {user?.email}
           </p>
         </div>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-          <p className="text-sm font-medium">Двухфакторная аутентификация</p>
-          <TwoFactorButton isTwoFactor={user?.isTwoFactorEnabled || false} />
+        <div
+          className={`flex flex-row items-center justify-between rounded-lg border ${
+            user?.role === "ADMIN" && "border-emerald-500"
+          } ${user?.role === "GOD" && "border-yellow-400"} p-3 shadow-sm`}
+        >
+          <p className="text-sm font-medium">Статус</p>
+          <p
+            className={`truncate text-sm max-w-[180px] font-mono p-1 ${
+              user?.role === "ADMIN" && "bg-emerald-500 text-white"
+            } ${
+              user?.role === "GOD" && "bg-yellow-400 text-white"
+            } dark:bg-transparent dark:border rounded-md`}
+          >
+            {user?.role}
+          </p>
         </div>
+        {user?.role === "GOD" && (
+          <div
+            className={`flex flex-row items-center justify-between rounded-lg border ${
+              user?.role === "GOD" && "border-yellow-400"
+            } p-3 shadow-sm`}
+          >
+            <p className="text-sm font-medium">Двухфакторная аутентификация</p>
+            <TwoFactorButton isTwoFactor={user?.isTwoFactorEnabled || false} />
+          </div>
+        )}
       </div>
     </div>
   );

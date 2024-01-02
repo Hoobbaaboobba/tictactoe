@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { db } from "@/lib/db";
-import { Crown } from "lucide-react";
+import { Crown, GraduationCap } from "lucide-react";
 
 const LeadersPage = async () => {
   const users = await db.user.findMany({
@@ -38,11 +38,18 @@ const LeadersPage = async () => {
         </TableHeader>
         <TableBody>
           {users.map((player, index) => (
-            <TableRow key={index}>
+            <TableRow
+              key={index}
+              className={`${player?.role === "GOD" && "bg-yellow-400/10"}`}
+            >
               <TableCell className="font-medium">
                 <div className="relative">
-                  {player.role === "GOD" && (
+                  {player.role === "GOD" ? (
                     <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
+                  ) : player.role ? (
+                    <GraduationCap className="absolute -top-[20px] left-2" />
+                  ) : (
+                    ""
                   )}
                   <Avatar>
                     <AvatarImage

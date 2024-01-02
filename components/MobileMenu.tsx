@@ -59,7 +59,13 @@ const MobileMenu = () => {
         <div key={index} className="flex flex-col justify-center items-center">
           <Button
             size="icon"
-            variant={pathname[1] === `${button.href}` ? "default" : "ghost"}
+            variant={
+              pathname[1] === `${button.href}` && user?.role !== "GOD"
+                ? "default"
+                : pathname[1] === `${button.href}` && user?.role === "GOD"
+                ? "gold"
+                : "ghost"
+            }
             asChild
           >
             <Link href={`/${button.href}`}>{button.icon}</Link>
