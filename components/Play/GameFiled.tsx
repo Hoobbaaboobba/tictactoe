@@ -5,6 +5,7 @@ import GameInfo from "@/components/GameInfo";
 import PlayersField from "@/components/PlayersField";
 import ResetButton from "@/components/ResetButton";
 import useGameState from "@/components/useGameState";
+import { redirect } from "next/navigation";
 
 interface Props {
   players:
@@ -43,43 +44,52 @@ export const GameFiled = ({ players }: Props) => {
     handleClick,
     resetGame,
   } = useGameState();
+
+  if (players === undefined) {
+    return redirect("/play");
+  }
+
   return (
     <div className="w-full flex flex-col gap-4 justify-center items-center overflow-y-auto">
       <PlayersField players={players} />
-      <GameInfo
-        isDraw={isDraw}
-        renderSymbol={renderSymbol}
-        winnerSequence={winnerSequence}
-        Symbol_o={SYMBOL_O}
-        currentStep={currentStep}
-        winnerSymbol={winnerSymbol}
-      />
-      <div
-        className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900 ${
-          currentStep === SYMBOL_O ? "green-anim" : "red-anim"
-        }`}
-      >
-        <div className="grid grid-cols-3">
-          {cells.map((cell, index) => {
-            const isWinner = winnerSequence?.includes(index);
-            return (
-              <Cell
-                key={index}
-                isWinner={isWinner}
-                cell={cell}
-                handleClick={handleClick}
-                renderSymbol={renderSymbol}
-                index={index}
-              />
-            );
-          })}
-        </div>
-      </div>
-      <ResetButton
-        winnerSequence={winnerSequence}
-        isDraw={isDraw}
-        resetGame={resetGame}
-      />
+      {players[1] && (
+        <>
+          <GameInfo
+            isDraw={isDraw}
+            renderSymbol={renderSymbol}
+            winnerSequence={winnerSequence}
+            Symbol_o={SYMBOL_O}
+            currentStep={currentStep}
+            winnerSymbol={winnerSymbol}
+          />
+          <div
+            className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900 ${
+              currentStep === SYMBOL_O ? "green-anim" : "red-anim"
+            }`}
+          >
+            <div className="grid grid-cols-3">
+              {cells.map((cell, index) => {
+                const isWinner = winnerSequence?.includes(index);
+                return (
+                  <Cell
+                    key={index}
+                    isWinner={isWinner}
+                    cell={cell}
+                    handleClick={handleClick}
+                    renderSymbol={renderSymbol}
+                    index={index}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <ResetButton
+            winnerSequence={winnerSequence}
+            isDraw={isDraw}
+            resetGame={resetGame}
+          />
+        </>
+      )}
     </div>
   );
 };
