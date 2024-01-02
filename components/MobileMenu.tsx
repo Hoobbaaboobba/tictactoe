@@ -37,7 +37,7 @@ const Buttons = [
 
 const MobileMenu = () => {
   const [nav, setNav] = useState<boolean>(false);
-  const pathname = usePathname().split("/");
+  const pathname = usePathname()?.split("/") || "";
 
   const user = useCurrentUser();
 
