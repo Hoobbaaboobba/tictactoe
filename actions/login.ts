@@ -28,21 +28,21 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
-    return { error: "Такой почты   не нет!" };
+    return { error: "Такой почты нет!" };
   }
 
-  if (!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(
-      existingUser.email
-    );
+  // if (!existingUser.emailVerified) {
+  //   const verificationToken = await generateVerificationToken(
+  //     existingUser.email
+  //   );
 
-    await sendVerificationEmail(
-      verificationToken.email,
-      verificationToken.token
-    );
+  //   await sendVerificationEmail(
+  //     verificationToken.email,
+  //     verificationToken.token
+  //   );
 
-    return { success: "Код подтверждения отправлен на почту!" };
-  }
+  //   return { success: "Код подтверждения отправлен на почту!" };
+  // }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
     if (code) {
