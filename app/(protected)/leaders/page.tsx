@@ -44,12 +44,11 @@ const LeadersPage = async () => {
             >
               <TableCell className="font-medium">
                 <div className="relative">
-                  {player.role === "GOD" ? (
+                  {player.role === "GOD" && (
                     <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
-                  ) : player.role ? (
+                  )}
+                  {player.role === "ADMIN" && (
                     <GraduationCap className="absolute -top-[20px] left-2" />
-                  ) : (
-                    ""
                   )}
                   <Avatar>
                     <AvatarImage
