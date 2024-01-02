@@ -12,7 +12,7 @@ generator client {
 enum UserRole {
   GOD
   ADMIN
-  USER
+  PLAYER
 }
 
 model User {
@@ -23,7 +23,7 @@ model User {
   image         String?
   password      String?
   points        Int? @default(0)
-  role          UserRole @default(USER)
+  role          UserRole @default(PLAYER)
   accounts      Account[]
   isTwoFactorEnabled Boolean @default(false)
   twoFactorConfirmation TwoFactorConfirmation?
