@@ -60,6 +60,7 @@ const InvitePage = async ({ params }: Props) => {
             name: user.name,
             userId: user.id,
             role: user.role,
+            image: user.image,
           },
         ],
       },
