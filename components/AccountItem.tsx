@@ -25,7 +25,7 @@ const AccountItem = async () => {
                 <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
               )}
               {user?.role === "ADMIN" && (
-                <GraduationCap className="absolute -top-[20px] left-2 text-black" />
+                <GraduationCap className="absolute -top-[20px] left-2" />
               )}
               <Avatar>
                 <AvatarImage

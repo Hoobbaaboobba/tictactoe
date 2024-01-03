@@ -49,7 +49,7 @@ const PlayersField = ({ players }: Props) => {
             <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
           )}
           {players[0].role === "ADMIN" && (
-            <GraduationCap className="absolute -top-[20px] left-2 text-black" />
+            <GraduationCap className="absolute -top-[17px] left-2" />
           )}
           <Avatar>
             <AvatarImage
@@ -73,11 +73,11 @@ const PlayersField = ({ players }: Props) => {
         {players[1] ? (
           <>
             <div className="flex relative gap-4 justify-center items-center">
-              {players[0].role === "GOD" && (
+              {players[1].role === "GOD" && (
                 <Crown className="absolute -top-[17px] left-2 text-yellow-400" />
               )}
-              {players[0].role === "ADMIN" && (
-                <GraduationCap className="absolute -top-[20px] left-2 text-black" />
+              {players[1].role === "ADMIN" && (
+                <GraduationCap className="absolute -top-[17px] left-2" />
               )}
               <Avatar>
                 <AvatarImage

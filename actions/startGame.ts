@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { TicTacToeTeam } from "@prisma/client";
+import { getExistingTicTacToeByUserId } from "@/data/verification-token";
 
 export const startGame = async () => {
   try {
@@ -42,20 +43,29 @@ export const startGame = async () => {
 export const exitGame = async () => {
   try {
     const user = await currentUser();
-    const expires = new Date(new Date().getTime() + 3600 * 1000);
 
     if (!user) {
       return null;
     }
 
-    const playground = await db.ticTacToePlayGround.delete({
+    const playgruond = await db.ticTacToePlayGround.findFirst({
       where: {
-        userId: user.id,
-        inviteCode: uuidv4(),
+        players: {
+          some: {
+            userId: user?.id,
+          },
+        },
       },
     });
 
-    return playground;
+    await db.ticTacToePlayGround.delete({
+      where: {
+        id: playgruond?.id,
+      },
+      select: {
+        players: true,
+      },
+    });
   } catch {
     return { error: "Что-то пошло не так!" };
   }

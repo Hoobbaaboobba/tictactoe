@@ -23,3 +23,15 @@ export const getVerificationTokenByEmail = async (email: string) => {
     return null;
   }
 };
+
+export const getExistingTicTacToeByUserId = async (userId: string) => {
+  try {
+    const ticTacToePlayGround = await db.ticTacToePlayGround.findFirst({
+      where: { userId },
+    });
+
+    return ticTacToePlayGround;
+  } catch {
+    return null;
+  }
+};

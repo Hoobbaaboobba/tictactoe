@@ -7,8 +7,9 @@ import PlayersField from "@/components/PlayersField";
 import ResetButton from "@/components/ResetButton";
 import useGameState from "@/components/useGameState";
 import { redirect, useRouter } from "next/navigation";
-import { startTransition } from "react";
 import { Button } from "../ui/button";
+import { useTransition } from "react";
+import { ScaleLoader } from "react-spinners";
 
 interface Props {
   players:
@@ -28,6 +29,7 @@ interface Props {
 }
 
 export const GameFiled = ({ players }: Props) => {
+  const [isPending, startTransition] = useTransition();
   const renderSymbol = (cell: any) => (
     <span
       className={`${
@@ -103,8 +105,17 @@ export const GameFiled = ({ players }: Props) => {
           />
         </>
       )}
-      <Button type="submit" onSubmit={onDeleteRoom} variant="destructive">
-        Покинуть комнату
+      <Button
+        type="submit"
+        onClick={onDeleteRoom}
+        variant="destructive"
+        className="w-[300px]"
+      >
+        {isPending ? (
+          <ScaleLoader color="#000000" height={20} width={4} />
+        ) : (
+          "Покинуть комнату"
+        )}
       </Button>
     </div>
   );

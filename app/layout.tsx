@@ -8,6 +8,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { SocketProvider } from "@/components/providers/SocketProvider";
+import { Suspense } from "react";
+import Loading from "@/components/HeaderFallback";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,7 +41,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <SocketProvider>
-              <Header />
+              <Suspense fallback={<Loading />}>
+                <Header />
+              </Suspense>
               {children}
               <MobileMenu />
             </SocketProvider>
