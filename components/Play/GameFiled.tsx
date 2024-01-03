@@ -1,5 +1,3 @@
-"use client";
-
 import { exitGame } from "@/actions/startGame";
 import Cell from "@/components/Cell";
 import GameInfo from "@/components/GameInfo";
@@ -10,7 +8,7 @@ import { redirect, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { useTransition } from "react";
 import { ScaleLoader } from "react-spinners";
-import GameBoard from "./GameBoard";
+import { GameBoard } from "./GameBoard";
 
 interface Props {
   players:
@@ -30,36 +28,21 @@ interface Props {
 }
 
 export const GameFiled = ({ players }: Props) => {
-  const [isPending, startTransition] = useTransition();
+  // const [isPending, startTransition] = useTransition();
   const renderSymbol = (cell: any) => (
-    <span
-      className={`${
-        cell === SYMBOL_O ? "text-green-600" : "text-rose-600"
-      } w-full h-full flex justify-center items-center`}
-    >
+    <span className={`w-full h-full flex justify-center items-center`}>
       {cell}
     </span>
   );
 
-  const {
-    currentStep,
-    SYMBOL_O,
-    isDraw,
-    winnerSequence,
-    winnerSymbol,
-    cells,
-    handleClick,
-    resetGame,
-  } = useGameState();
+  // const router = useRouter();
 
-  const router = useRouter();
-
-  const onDeleteRoom = () => {
-    startTransition(() => {
-      exitGame();
-      router.refresh();
-    });
-  };
+  // const onDeleteRoom = () => {
+  //   startTransition(() => {
+  //     exitGame();
+  //     router.refresh();
+  //   });
+  // };
 
   if (players === undefined) {
     return redirect("/play");
@@ -70,23 +53,23 @@ export const GameFiled = ({ players }: Props) => {
       <PlayersField players={players} />
       {players[1] && (
         <>
-          <GameInfo
+          {/* <GameInfo
             isDraw={isDraw}
             renderSymbol={renderSymbol}
             winnerSequence={winnerSequence}
             Symbol_o={SYMBOL_O}
             currentStep={currentStep}
             winnerSymbol={winnerSymbol}
-          />
-          <GameBoard currentStep={currentStep} />
-          <ResetButton
+          /> */}
+          <GameBoard currentStep={"X"} />
+          {/* <ResetButton
             winnerSequence={winnerSequence}
             isDraw={isDraw}
             resetGame={resetGame}
-          />
+          /> */}
         </>
       )}
-      <Button
+      {/* <Button
         type="submit"
         onClick={onDeleteRoom}
         variant="destructive"
@@ -97,7 +80,7 @@ export const GameFiled = ({ players }: Props) => {
         ) : (
           "Покинуть комнату"
         )}
-      </Button>
+      </Button> */}
     </div>
   );
 };

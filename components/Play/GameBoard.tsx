@@ -1,46 +1,30 @@
-import { currentUser } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { cellState } from "@/actions/cellState";
 import Cell from "../Cell";
+import { currentUser } from "@/lib/auth";
+import { getBoard } from "@/actions/getBoard";
 
-interface BoardProps {
+interface Props {
   currentStep: string;
 }
 
-const GameBoard = async ({ currentStep }: BoardProps) => {
-  const user = await currentUser();
+export const GameBoard = async ({ currentStep }: Props) => {
+  const cells = ["", "", "", "", "", "", "", "", ""];
 
-  if (!user) {
-    return null;
-  }
-
-  const playgruond = await db.ticTacToePlayGround.findFirst({
-    where: {
-      players: {
-        some: {
-          userId: user?.id,
-        },
-      },
-    },
-  });
-
-  if (!playgruond) {
-    return null;
-  }
-
-  const board = await playgruond.board.split("");
+  const board = await getBoard();
 
   return (
     <div
       className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
     >
       <div className="grid grid-cols-3">
-        {board.map((cell, index) => {
+        {cells.map((cell, index) => {
           return (
             <Cell
               key={index}
-              cell={cell}
               index={index}
+              cell={cell}
               currentStep={currentStep}
+              board={board}
             />
           );
         })}
@@ -48,5 +32,3 @@ const GameBoard = async ({ currentStep }: BoardProps) => {
     </div>
   );
 };
-
-export default GameBoard;
