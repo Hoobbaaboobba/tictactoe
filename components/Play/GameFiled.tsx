@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import { useTransition } from "react";
 import { ScaleLoader } from "react-spinners";
 import { GameBoard } from "./GameBoard";
+import DeleteRoomButton from "./DeleteRoomButton";
 
 interface Props {
   players:
@@ -28,22 +29,6 @@ interface Props {
 }
 
 export const GameFiled = ({ players }: Props) => {
-  // const [isPending, startTransition] = useTransition();
-  const renderSymbol = (cell: any) => (
-    <span className={`w-full h-full flex justify-center items-center`}>
-      {cell}
-    </span>
-  );
-
-  // const router = useRouter();
-
-  // const onDeleteRoom = () => {
-  //   startTransition(() => {
-  //     exitGame();
-  //     router.refresh();
-  //   });
-  // };
-
   if (players === undefined) {
     return redirect("/play");
   }
@@ -69,18 +54,7 @@ export const GameFiled = ({ players }: Props) => {
           /> */}
         </>
       )}
-      {/* <Button
-        type="submit"
-        onClick={onDeleteRoom}
-        variant="destructive"
-        className="w-[300px]"
-      >
-        {isPending ? (
-          <ScaleLoader color="#000000" height={20} width={4} />
-        ) : (
-          "Покинуть комнату"
-        )}
-      </Button> */}
+      <DeleteRoomButton />
     </div>
   );
 };
