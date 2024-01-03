@@ -1,6 +1,5 @@
 "use client";
 
-import { getBoard } from "@/actions/getBoard";
 import { createContext, useContext, useEffect, useState } from "react";
 import { io as ClientIO } from "socket.io-client";
 

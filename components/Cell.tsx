@@ -1,9 +1,10 @@
 "use client";
 
 import { cellState } from "@/actions/cellState";
-import { useEffect, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useSocket } from "./providers/SocketProvider";
 import { getBoard } from "@/actions/getBoard";
+import { useRouter } from "next/navigation";
 
 interface Props {
   cell: string | null;
@@ -14,7 +15,18 @@ interface Props {
 
 const Cell = ({ cell, index, currentStep, board }: Props) => {
   const [isPending, startTransition] = useTransition();
+  // const [data, setData] = useState<string[] | null | undefined>([]);
   const { socket } = useSocket();
+
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on("dataUpdated", (updatedData: any) => {
+  //       setData(updatedData);
+  //     });
+  //   }
+  // }, []);
 
   const onClick = () => {
     startTransition(() => {
