@@ -10,11 +10,11 @@ interface Props {
   players:
     | {
         id: string;
-        team: "CROSS" | "CIRCLE";
-        role: "GOD" | "ADMIN" | "PLAYER";
+        symbol: string;
         name: string | null;
         image: string | null;
         points: number | null;
+        role: "GOD" | "ADMIN" | "PLAYER";
         userId: string;
         playGroundId: string;
         createdAt: Date;

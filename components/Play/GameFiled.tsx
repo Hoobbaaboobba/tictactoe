@@ -10,16 +10,17 @@ import { redirect, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { useTransition } from "react";
 import { ScaleLoader } from "react-spinners";
+import GameBoard from "./GameBoard";
 
 interface Props {
   players:
     | {
         id: string;
-        team: "CROSS" | "CIRCLE";
-        role: "GOD" | "ADMIN" | "PLAYER";
+        symbol: string;
         name: string | null;
         image: string | null;
         points: number | null;
+        role: "GOD" | "ADMIN" | "PLAYER";
         userId: string;
         playGroundId: string;
         createdAt: Date;
@@ -77,27 +78,7 @@ export const GameFiled = ({ players }: Props) => {
             currentStep={currentStep}
             winnerSymbol={winnerSymbol}
           />
-          <div
-            className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900 ${
-              currentStep === SYMBOL_O ? "green-anim" : "red-anim"
-            }`}
-          >
-            <div className="grid grid-cols-3">
-              {cells.map((cell, index) => {
-                const isWinner = winnerSequence?.includes(index);
-                return (
-                  <Cell
-                    key={index}
-                    isWinner={isWinner}
-                    cell={cell}
-                    handleClick={handleClick}
-                    renderSymbol={renderSymbol}
-                    index={index}
-                  />
-                );
-              })}
-            </div>
-          </div>
+          <GameBoard currentStep={currentStep} />
           <ResetButton
             winnerSequence={winnerSequence}
             isDraw={isDraw}

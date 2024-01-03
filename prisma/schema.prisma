@@ -35,17 +35,17 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-enum TicTacToeTeam {
-  CIRCLE
-  CROSS
-}
-
 model TicTacToePlayGround {
   id String @id @default(uuid())
   inviteCode String @unique
 
+  status String @default("ongoing")
+
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  board String @default("---------")
+  moves Move[]
 
   players Player[]
 
@@ -55,12 +55,28 @@ model TicTacToePlayGround {
   @@index([userId])
 }
 
+
+model Move {
+  id        Int    @id @default(autoincrement())
+  playerId String
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  playGroundId String
+  playgrounds TicTacToePlayGround @relation(fields: [playGroundId], references: [id], onDelete: Cascade)
+  moveIndex Int
+  createdAt DateTime @default(now())
+
+  @@index([playerId])
+  @@index([playGroundId])
+}
+
 model Player {
   id String @id @default(uuid())
-  team TicTacToeTeam @default(CROSS)
+  symbol String @default("X")
   name String?
   image String?
   points  Int?
+  moves Move[]
   role UserRole @default(PLAYER)
 
   userId String

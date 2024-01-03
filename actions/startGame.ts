@@ -4,8 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
-import { TicTacToeTeam } from "@prisma/client";
-import { getExistingTicTacToeByUserId } from "@/data/verification-token";
 
 export const startGame = async () => {
   try {
@@ -27,7 +25,7 @@ export const startGame = async () => {
               name: user.name,
               userId: user.id,
               role: user.role,
-              team: TicTacToeTeam.CIRCLE,
+              symbol: "O",
             },
           ],
         },

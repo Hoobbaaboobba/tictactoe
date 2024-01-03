@@ -1,20 +1,27 @@
+import { cellState } from "@/actions/cellState";
+import { useTransition } from "react";
+
 interface Props {
-  handleClick: (index: number) => void;
-  isWinner: boolean | undefined;
   cell: string | null;
-  renderSymbol: (cell: any) => JSX.Element;
   index: number;
+  currentStep: string;
 }
 
-const Cell = ({ handleClick, isWinner, cell, renderSymbol, index }: Props) => {
+const Cell = ({ cell, index, currentStep }: Props) => {
+  const [isPending, startTransition] = useTransition();
+
+  const onClick = () => {
+    startTransition(() => {
+      cellState(index, currentStep);
+    });
+  };
   return (
     <button
-      onClick={() => handleClick(index)}
-      className={`${
-        isWinner && "bg-green-100"
-      } w-16 h-16 border dark:border-white border-black flex justify-center items-center text-4xl`}
+      type="submit"
+      onClick={onClick}
+      className={`w-16 h-16 border dark:border-white border-black flex justify-center items-center text-4xl`}
     >
-      {cell ? renderSymbol(cell) : null}
+      {cell === "-" ? "" : cell}
     </button>
   );
 };
