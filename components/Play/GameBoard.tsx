@@ -14,20 +14,20 @@ interface Props {
 }
 
 export const GameBoard = ({ currentStep, gameId, board }: Props) => {
-  const [incomingMoves, setIncomingMoves] = useState<string[]>([]);
+  // const [incomingMoves, setIncomingMoves] = useState<string[]>([]);
   const cells = ["", "", "", "", "", "", "", "", ""];
 
-  useEffect(() => {
-    pusherClient.subscribe(gameId);
+  // useEffect(() => {
+  //   pusherClient.subscribe(gameId);
 
-    pusherClient.bind("incoming-moves", (move: string, index: number) => {
-      setIncomingMoves((prev) => [...prev, move]);
-    });
+  //   pusherClient.bind("incoming-moves", (move: string, index: number) => {
+  //     setIncomingMoves((prev) => [...prev, move]);
+  //   });
 
-    return () => {
-      pusherClient.unsubscribe(gameId);
-    };
-  });
+  //   return () => {
+  //     pusherClient.unsubscribe(gameId);
+  //   };
+  // });
 
   return (
     <div
@@ -43,7 +43,7 @@ export const GameBoard = ({ currentStep, gameId, board }: Props) => {
               cell={cell}
               currentStep={currentStep}
               board={board}
-              incomingMoves={incomingMoves}
+              // incomingMoves={incomingMoves}
             />
           );
         })}
