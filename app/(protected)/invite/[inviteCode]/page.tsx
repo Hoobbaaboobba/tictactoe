@@ -19,7 +19,7 @@ const InvitePage = async ({ params }: Props) => {
     return redirect("/play");
   }
 
-  const amountOfPlayes = await db.ticTacToePlayGround.findUnique({
+  const amountOfPlayes = await db.ticTacToePlayGround.findFirst({
     where: {
       id: user.id,
     },
@@ -45,10 +45,6 @@ const InvitePage = async ({ params }: Props) => {
     },
   });
 
-  if (existingTicTacToeGame) {
-    return redirect(`/play/${existingTicTacToeGame.id}`);
-  }
-
   const ticTacToeGame = await db.ticTacToePlayGround.update({
     where: {
       inviteCode: params.inviteCode,
@@ -66,6 +62,10 @@ const InvitePage = async ({ params }: Props) => {
       },
     },
   });
+
+  if (existingTicTacToeGame) {
+    return redirect(`/play/${existingTicTacToeGame.id}`);
+  }
 
   if (ticTacToeGame) {
     return redirect(`/play/${ticTacToeGame.id}`);

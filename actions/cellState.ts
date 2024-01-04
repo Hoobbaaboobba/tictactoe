@@ -35,7 +35,7 @@ export const cellState = async (
       currentSymbol +
       playgruond.board.slice(currentIndex + 1);
 
-    const board = await db.ticTacToePlayGround.update({
+    await db.ticTacToePlayGround.update({
       where: {
         id: playgruond.id,
       },
