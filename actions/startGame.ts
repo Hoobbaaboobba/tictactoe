@@ -15,7 +15,7 @@ export const startGame = async () => {
       return null;
     }
 
-    await db.ticTacToePlayGround.create({
+    const playgruond = await db.ticTacToePlayGround.create({
       data: {
         userId: user.id,
         inviteCode: uuidv4(),
@@ -34,6 +34,7 @@ export const startGame = async () => {
     });
 
     revalidatePath("/play");
+    return playgruond;
   } catch {
     return { error: "Что-то пошло не так!" };
   }
