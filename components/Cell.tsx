@@ -1,8 +1,4 @@
-"use client";
-
 import { cellState } from "@/actions/cellState";
-import { useEffect, useTransition } from "react";
-import { PuffLoader } from "react-spinners";
 
 interface Props {
   cell: string | null;
@@ -12,15 +8,9 @@ interface Props {
   gameId: string;
 }
 
-const Cell = ({ cell, index, currentStep, board, gameId }: Props) => {
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {});
-
-  const onClick = () => {
-    startTransition(async () => {
-      await cellState(index, currentStep, gameId);
-    });
+const Cell = async ({ cell, index, currentStep, board, gameId }: Props) => {
+  const onClick = async () => {
+    await cellState(index, currentStep, gameId);
   };
 
   return (
@@ -30,21 +20,7 @@ const Cell = ({ cell, index, currentStep, board, gameId }: Props) => {
       onClick={onClick}
       className={`w-16 h-16 border dark:border-white border-black flex justify-center items-center text-4xl`}
     >
-      {board &&
-        (isPending ? (
-          <>
-            <span className="dark:hidden block">
-              <PuffLoader color="#ffffff" size={20} />
-            </span>
-            <span className="hidden dark:block">
-              <PuffLoader color="#000000" size={20} />
-            </span>
-          </>
-        ) : board[index] === "-" ? (
-          ""
-        ) : (
-          board[index]
-        ))}
+      {board && (board[index] === "-" ? "" : board[index])}
     </button>
   );
 };

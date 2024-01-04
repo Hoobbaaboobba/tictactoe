@@ -1,19 +1,19 @@
 "use client";
 
 import { exitGame } from "@/actions/startGame";
-import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { Button } from "../ui/button";
 import { ScaleLoader } from "react-spinners";
 
-const DeleteRoomButton = () => {
+interface Props {
+  gameId: string;
+}
+const DeleteRoomButton = ({ gameId }: Props) => {
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
 
   const onDeleteRoom = () => {
-    startTransition(() => {
-      exitGame();
-      router.refresh();
+    startTransition(async () => {
+      await exitGame(gameId);
     });
   };
   return (
@@ -24,7 +24,7 @@ const DeleteRoomButton = () => {
       className="w-[300px]"
     >
       {isPending ? (
-        <ScaleLoader color="#000000" height={20} width={4} />
+        <ScaleLoader color="#ffffff" height={20} width={4} />
       ) : (
         "Покинуть комнату"
       )}

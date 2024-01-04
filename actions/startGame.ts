@@ -39,7 +39,7 @@ export const startGame = async () => {
   }
 };
 
-export const exitGame = async () => {
+export const exitGame = async (gameId: string) => {
   try {
     const user = await currentUser();
 
@@ -65,6 +65,8 @@ export const exitGame = async () => {
         players: true,
       },
     });
+
+    revalidatePath(`/play/${gameId}`);
   } catch {
     return { error: "Что-то пошло не так!" };
   }

@@ -55,7 +55,7 @@ export const GameFiled = ({ players, gameId }: Props) => {
           /> */}
         </>
       )}
-      <DeleteRoomButton />
+      <DeleteRoomButton gameId={gameId} />
     </div>
   );
 };
