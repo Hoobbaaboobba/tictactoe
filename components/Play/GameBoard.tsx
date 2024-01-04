@@ -1,17 +1,32 @@
+"use client";
+
 import { cellState } from "@/actions/cellState";
 import Cell from "../Cell";
 import { currentUser } from "@/lib/auth";
 import { getBoard } from "@/actions/getBoard";
+import { useEffect, useState } from "react";
+import { pusherClient } from "@/pusher";
 
 interface Props {
   currentStep: string;
   gameId: string;
 }
 
-export const GameBoard = async ({ currentStep, gameId }: Props) => {
+export const GameBoard = ({ currentStep, gameId }: Props) => {
+  const [incomingMoves, setIncomingMoves] = useState<string[]>([]);
   const cells = ["", "", "", "", "", "", "", "", ""];
 
-  const board = await getBoard();
+  useEffect(() => {
+    pusherClient.subscribe(gameId);
+
+    pusherClient.bind("incoming-moves", (move: string) => {
+      setIncomingMoves((prev) => [...prev, move]);
+    });
+
+    return () => {
+      pusherClient.unsubscribe(gameId);
+    };
+  });
 
   return (
     <div
@@ -26,7 +41,7 @@ export const GameBoard = async ({ currentStep, gameId }: Props) => {
               index={index}
               cell={cell}
               currentStep={currentStep}
-              board={board}
+              board={incomingMoves}
             />
           );
         })}

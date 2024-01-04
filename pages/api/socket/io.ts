@@ -19,6 +19,12 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
       addTrailingSlash: false,
     });
     res.socket.server.io = io;
+
+    // io.on("connection", (socket: any) => [
+    //   socket.on("make-move", (move: any) => {
+    //     io.emit("set-move", move);
+    //   }),
+    // ]);
   }
 
   res.end();
