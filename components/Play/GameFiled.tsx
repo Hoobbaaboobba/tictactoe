@@ -2,6 +2,7 @@ import PlayersField from "@/components/PlayersField";
 import { redirect } from "next/navigation";
 import { GameBoard } from "./GameBoard";
 import DeleteRoomButton from "./DeleteRoomButton";
+import { db } from "@/lib/db";
 
 interface Props {
   players:
@@ -21,10 +22,18 @@ interface Props {
   gameId: string;
 }
 
-export const GameFiled = ({ players, gameId }: Props) => {
+export const GameFiled = async ({ players, gameId }: Props) => {
   if (players === undefined) {
     return redirect("/play");
   }
+
+  const existingTicTacToeGame = await db.ticTacToePlayGround.findFirst({
+    where: {
+      id: gameId,
+    },
+  });
+
+  const board = existingTicTacToeGame?.board.split("");
 
   return (
     <div className="w-full flex flex-col gap-4 justify-center items-center overflow-y-auto">
@@ -39,7 +48,7 @@ export const GameFiled = ({ players, gameId }: Props) => {
             currentStep={currentStep}
             winnerSymbol={winnerSymbol}
           /> */}
-          <GameBoard currentStep={"X"} gameId={gameId} />
+          <GameBoard currentStep={"X"} gameId={gameId} board={board} />
           {/* <ResetButton
             winnerSequence={winnerSequence}
             isDraw={isDraw}

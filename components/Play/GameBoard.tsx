@@ -10,16 +10,17 @@ import { pusherClient } from "@/pusher";
 interface Props {
   currentStep: string;
   gameId: string;
+  board: string[] | undefined;
 }
 
-export const GameBoard = ({ currentStep, gameId }: Props) => {
+export const GameBoard = ({ currentStep, gameId, board }: Props) => {
   const [incomingMoves, setIncomingMoves] = useState<string[]>([]);
   const cells = ["", "", "", "", "", "", "", "", ""];
 
   useEffect(() => {
     pusherClient.subscribe(gameId);
 
-    pusherClient.bind("incoming-moves", (move: string) => {
+    pusherClient.bind("incoming-moves", (move: string, index: number) => {
       setIncomingMoves((prev) => [...prev, move]);
     });
 
@@ -41,7 +42,8 @@ export const GameBoard = ({ currentStep, gameId }: Props) => {
               index={index}
               cell={cell}
               currentStep={currentStep}
-              board={incomingMoves}
+              board={board}
+              incomingMoves={incomingMoves}
             />
           );
         })}
