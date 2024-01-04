@@ -26,9 +26,10 @@ interface Props {
         updatedAt: Date;
       }[]
     | undefined;
+  gameId: string;
 }
 
-export const GameFiled = ({ players }: Props) => {
+export const GameFiled = ({ players, gameId }: Props) => {
   if (players === undefined) {
     return redirect("/play");
   }
@@ -46,7 +47,7 @@ export const GameFiled = ({ players }: Props) => {
             currentStep={currentStep}
             winnerSymbol={winnerSymbol}
           /> */}
-          <GameBoard currentStep={"X"} />
+          <GameBoard currentStep={"X"} gameId={gameId} />
           {/* <ResetButton
             winnerSequence={winnerSequence}
             isDraw={isDraw}

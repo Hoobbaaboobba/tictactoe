@@ -29,7 +29,9 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
     },
   });
 
-  return <GameFiled players={ticTacToeGamePlayers?.players} />;
+  return (
+    <GameFiled players={ticTacToeGamePlayers?.players} gameId={params.gameId} />
+  );
 };
 
 export default InviteCodePage;

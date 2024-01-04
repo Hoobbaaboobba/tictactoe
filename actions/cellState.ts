@@ -2,10 +2,12 @@
 
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export const cellState = async (
   currentIndex: number,
-  currentSymbol: string
+  currentSymbol: string,
+  gameId: string
 ) => {
   try {
     const user = await currentUser();
@@ -42,6 +44,7 @@ export const cellState = async (
       },
     });
 
+    revalidatePath(`/play/${gameId}`);
     return newBoard;
   } catch {
     return { error: "Что-то пошло не так!" };

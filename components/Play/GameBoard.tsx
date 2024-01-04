@@ -5,9 +5,10 @@ import { getBoard } from "@/actions/getBoard";
 
 interface Props {
   currentStep: string;
+  gameId: string;
 }
 
-export const GameBoard = async ({ currentStep }: Props) => {
+export const GameBoard = async ({ currentStep, gameId }: Props) => {
   const cells = ["", "", "", "", "", "", "", "", ""];
 
   const board = await getBoard();
@@ -21,6 +22,7 @@ export const GameBoard = async ({ currentStep }: Props) => {
           return (
             <Cell
               key={index}
+              gameId={gameId}
               index={index}
               cell={cell}
               currentStep={currentStep}

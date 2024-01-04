@@ -5,32 +5,24 @@ import { useEffect, useState, useTransition } from "react";
 import { useSocket } from "./providers/SocketProvider";
 import { getBoard } from "@/actions/getBoard";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 interface Props {
   cell: string | null;
   index: number;
   currentStep: string;
   board: string[] | null | undefined;
+  gameId: string;
 }
 
-const Cell = ({ cell, index, currentStep, board }: Props) => {
+const Cell = ({ cell, index, currentStep, board, gameId }: Props) => {
   const [isPending, startTransition] = useTransition();
-  // const [data, setData] = useState<string[] | null | undefined>([]);
-  const { socket } = useSocket();
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (socket) {
-  //     socket.on("dataUpdated", (updatedData: any) => {
-  //       setData(updatedData);
-  //     });
-  //   }
-  // }, []);
-
   const onClick = () => {
     startTransition(() => {
-      cellState(index, currentStep);
+      cellState(index, currentStep, gameId);
     });
   };
 
