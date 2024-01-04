@@ -10,6 +10,7 @@ interface InviteCodeProps {
 }
 
 export const revalidate = 1;
+export const runtime = "edge";
 
 const InviteCodePage = async ({ params }: InviteCodeProps) => {
   const user = await currentUser();
