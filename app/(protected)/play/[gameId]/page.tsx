@@ -9,6 +9,8 @@ interface InviteCodeProps {
   };
 }
 
+export const revalidate = 1;
+
 const InviteCodePage = async ({ params }: InviteCodeProps) => {
   const user = await currentUser();
 

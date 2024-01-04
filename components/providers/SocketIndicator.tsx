@@ -1,7 +1,6 @@
 "use client";
 
 import { useSocket } from "./SocketProvider";
-import { WifiOff } from "lucide-react";
 
 export const SocketIndicator = () => {
   const { isConnected } = useSocket();
