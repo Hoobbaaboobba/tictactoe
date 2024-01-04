@@ -7,10 +7,6 @@ export const SocketIndicator = () => {
   const { isConnected } = useSocket();
 
   if (!isConnected) {
-    return (
-      <div className="bg-rose-600 animate-bounce shadow-md shadow-rose-400 transition flex justify-center items-center text-white border-none rounded-full w-10 h-10">
-        <WifiOff className="w-6 h-6" />
-      </div>
-    );
+    return <span className="text-xl text-rose-500 animate-pulse">{">"}1c</span>;
   }
 };
