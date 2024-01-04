@@ -18,6 +18,7 @@ import { Check, Copy } from "lucide-react";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
+import { revalidatePath } from "next/cache";
 
 interface Props {
   playGroundId: string | null;
@@ -31,8 +32,9 @@ const TicTacToePlayGround = ({ playGroundId, inviteCode }: Props) => {
   const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/invite/${inviteCode}`;
 
   const onMakeRoom = () => {
-    startTransition(async () => {
-      await startGame();
+    startTransition(() => {
+      startGame();
+      revalidatePath("/play");
     });
   };
 
