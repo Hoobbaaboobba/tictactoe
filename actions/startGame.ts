@@ -15,7 +15,7 @@ export const startGame = async () => {
       return null;
     }
 
-    const playground = await db.ticTacToePlayGround.create({
+    await db.ticTacToePlayGround.create({
       data: {
         userId: user.id,
         inviteCode: uuidv4(),
@@ -57,7 +57,7 @@ export const exitGame = async (gameId: string) => {
       },
     });
 
-    const exit = await db.ticTacToePlayGround.delete({
+    await db.ticTacToePlayGround.delete({
       where: {
         id: playgruond?.id,
       },
