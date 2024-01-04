@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 export const startGame = async () => {
   try {
@@ -32,7 +33,7 @@ export const startGame = async () => {
       },
     });
 
-    return playground;
+    revalidatePath("/play");
   } catch {
     return { error: "Что-то пошло не так!" };
   }
@@ -56,7 +57,7 @@ export const exitGame = async () => {
       },
     });
 
-    await db.ticTacToePlayGround.delete({
+    const exit = await db.ticTacToePlayGround.delete({
       where: {
         id: playgruond?.id,
       },

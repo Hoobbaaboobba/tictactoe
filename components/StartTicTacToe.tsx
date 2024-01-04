@@ -27,14 +27,12 @@ interface Props {
 const TicTacToePlayGround = ({ playGroundId, inviteCode }: Props) => {
   const [isPending, startTransition] = useTransition();
   const [copied, setCopied] = useState(false);
-  const router = useRouter();
 
   const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/invite/${inviteCode}`;
 
   const onMakeRoom = () => {
-    startTransition(() => {
-      startGame();
-      router.refresh();
+    startTransition(async () => {
+      await startGame();
     });
   };
 

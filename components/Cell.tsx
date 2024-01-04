@@ -1,11 +1,8 @@
 "use client";
 
 import { cellState } from "@/actions/cellState";
-import { useEffect, useState, useTransition } from "react";
-import { useSocket } from "./providers/SocketProvider";
-import { getBoard } from "@/actions/getBoard";
-import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { useEffect, useTransition } from "react";
+import { PuffLoader } from "react-spinners";
 
 interface Props {
   cell: string | null;
@@ -18,11 +15,11 @@ interface Props {
 const Cell = ({ cell, index, currentStep, board, gameId }: Props) => {
   const [isPending, startTransition] = useTransition();
 
-  const router = useRouter();
+  useEffect(() => {});
 
   const onClick = () => {
-    startTransition(() => {
-      cellState(index, currentStep, gameId);
+    startTransition(async () => {
+      await cellState(index, currentStep, gameId);
     });
   };
 
@@ -33,7 +30,21 @@ const Cell = ({ cell, index, currentStep, board, gameId }: Props) => {
       onClick={onClick}
       className={`w-16 h-16 border dark:border-white border-black flex justify-center items-center text-4xl`}
     >
-      {board && (board[index] === "-" ? "" : board[index])}
+      {board &&
+        (isPending ? (
+          <>
+            <span className="dark:hidden block">
+              <PuffLoader color="#ffffff" size={20} />
+            </span>
+            <span className="hidden dark:block">
+              <PuffLoader color="#000000" size={20} />
+            </span>
+          </>
+        ) : board[index] === "-" ? (
+          ""
+        ) : (
+          board[index]
+        ))}
     </button>
   );
 };
