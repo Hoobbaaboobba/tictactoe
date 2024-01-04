@@ -33,7 +33,7 @@ export const startGame = async () => {
       },
     });
 
-    return playgruond;
+    revalidatePath("/play");
   } catch {
     return { error: "Что-то пошло не так!" };
   }
@@ -57,7 +57,7 @@ export const exitGame = async (gameId: string) => {
       },
     });
 
-    const exit = await db.ticTacToePlayGround.delete({
+    await db.ticTacToePlayGround.delete({
       where: {
         id: playgruond?.id,
       },
@@ -67,7 +67,6 @@ export const exitGame = async (gameId: string) => {
     });
 
     revalidatePath(`/play/${gameId}`);
-    return exit;
   } catch {
     return { error: "Что-то пошло не так!" };
   }

@@ -1,3 +1,5 @@
+"use client";
+
 import { cellState } from "@/actions/cellState";
 
 interface Props {
@@ -8,7 +10,7 @@ interface Props {
   gameId: string;
 }
 
-const Cell = async ({ cell, index, currentStep, board, gameId }: Props) => {
+const Cell = ({ cell, index, currentStep, board, gameId }: Props) => {
   const onClick = async () => {
     await cellState(index, currentStep, gameId);
   };

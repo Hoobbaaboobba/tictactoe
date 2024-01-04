@@ -1,13 +1,5 @@
-import { exitGame } from "@/actions/startGame";
-import Cell from "@/components/Cell";
-import GameInfo from "@/components/GameInfo";
 import PlayersField from "@/components/PlayersField";
-import ResetButton from "@/components/ResetButton";
-import useGameState from "@/components/useGameState";
-import { redirect, useRouter } from "next/navigation";
-import { Button } from "../ui/button";
-import { useTransition } from "react";
-import { ScaleLoader } from "react-spinners";
+import { redirect } from "next/navigation";
 import { GameBoard } from "./GameBoard";
 import DeleteRoomButton from "./DeleteRoomButton";
 

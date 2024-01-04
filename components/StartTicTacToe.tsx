@@ -32,9 +32,8 @@ const TicTacToePlayGround = ({ playGroundId, inviteCode }: Props) => {
   const inviteUrl = `${process.env.NEXT_PUBLIC_APP_URL}/invite/${inviteCode}`;
 
   const onMakeRoom = () => {
-    startTransition(() => {
-      startGame();
-      revalidatePath("/play");
+    startTransition(async () => {
+      await startGame();
     });
   };
 
@@ -82,52 +81,48 @@ const TicTacToePlayGround = ({ playGroundId, inviteCode }: Props) => {
       </TabsContent>
       <TabsContent value="make">
         <Card>
-          <CardHeader>
-            <CardTitle className="w-full text-center">
-              Создать новую комнату X|O
-            </CardTitle>
-            <CardDescription></CardDescription>
-          </CardHeader>
-          {playGroundId && (
-            <>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="new">Ссылка приглашения</Label>
-                  <div className="flex w-full gap-2">
-                    <Input value={inviteUrl} />
-                    <Button onClick={onCopy} variant="outline" size="icon">
-                      {copied ? (
-                        <Check className="w-4 h-4" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
-                    </Button>
+          <form action={onMakeRoom}>
+            <CardHeader>
+              <CardTitle className="w-full text-center">
+                Создать новую комнату X|O
+              </CardTitle>
+            </CardHeader>
+            {playGroundId && (
+              <>
+                <CardContent className="space-y-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="new">Ссылка приглашения</Label>
+                    <div className="flex w-full gap-2">
+                      <Input value={inviteUrl} />
+                      <Button onClick={onCopy} variant="outline" size="icon">
+                        {copied ? (
+                          <Check className="w-4 h-4" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full" asChild>
+                    <Link href={`/play/${playGroundId}`}>Играть</Link>
+                  </Button>
+                </CardFooter>
+              </>
+            )}
+            {!playGroundId && (
               <CardFooter>
-                <Button className="w-full" asChild>
-                  <Link href={`/play/${playGroundId}`}>Играть</Link>
+                <Button disabled={isPending} className="w-full" type="submit">
+                  {isPending ? (
+                    <ScaleLoader color="#ffffff" height={20} width={3} />
+                  ) : (
+                    "Создать"
+                  )}
                 </Button>
               </CardFooter>
-            </>
-          )}
-          {!playGroundId && (
-            <CardFooter>
-              <Button
-                disabled={isPending}
-                className="w-full"
-                type="submit"
-                onClick={onMakeRoom}
-              >
-                {isPending ? (
-                  <ScaleLoader color="#ffffff" height={20} width={3} />
-                ) : (
-                  "Создать"
-                )}
-              </Button>
-            </CardFooter>
-          )}
+            )}
+          </form>
         </Card>
       </TabsContent>
     </Tabs>

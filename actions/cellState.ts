@@ -35,7 +35,7 @@ export const cellState = async (
       currentSymbol +
       playgruond.board.slice(currentIndex + 1);
 
-    await db.ticTacToePlayGround.update({
+    const board = await db.ticTacToePlayGround.update({
       where: {
         id: playgruond.id,
       },
@@ -45,6 +45,7 @@ export const cellState = async (
     });
 
     revalidatePath(`/play/${gameId}`);
+    return board;
   } catch {
     return { error: "Что-то пошло не так!" };
   }

@@ -3,7 +3,6 @@ import { NextApiRequest } from "next";
 import { Server as ServerIO } from "socket.io";
 
 import { NextApiResponseServerIo } from "@/types";
-import { getBoard } from "@/actions/getBoard";
 
 export const config = {
   api: {
@@ -17,14 +16,9 @@ const ioHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
     const httpServer: NetServer = res.socket.server as any;
     const io = new ServerIO(httpServer, {
       path: path,
-      // @ts-ignore
       addTrailingSlash: false,
     });
     res.socket.server.io = io;
-
-    const board = await getBoard();
-
-    io.emit("dataUpdated", board);
   }
 
   res.end();

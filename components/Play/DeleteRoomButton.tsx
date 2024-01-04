@@ -17,18 +17,20 @@ const DeleteRoomButton = ({ gameId }: Props) => {
     });
   };
   return (
-    <Button
-      type="submit"
-      onClick={onDeleteRoom}
-      variant="destructive"
-      className="w-[300px]"
-    >
-      {isPending ? (
-        <ScaleLoader color="#ffffff" height={20} width={4} />
-      ) : (
-        "Покинуть комнату"
-      )}
-    </Button>
+    <form action={onDeleteRoom}>
+      <Button
+        type="submit"
+        onClick={onDeleteRoom}
+        variant="destructive"
+        className="w-[300px]"
+      >
+        {isPending ? (
+          <ScaleLoader color="#ffffff" height={20} width={4} />
+        ) : (
+          "Покинуть комнату"
+        )}
+      </Button>
+    </form>
   );
 };
 
