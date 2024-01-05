@@ -15,10 +15,6 @@ const Cell = ({ cell, index, currentStep, board, gameId }: Props) => {
   };
   let input = "X";
 
-  // const makeMove = async (move: string) => {
-  //   await axios.post("/api/symbol", { move, gameId, index });
-  // };
-
   return (
     <button
       key={index}

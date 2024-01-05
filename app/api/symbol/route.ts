@@ -1,11 +1,7 @@
 import { db } from "@/lib/db";
-import { pusherServer } from "@/pusher";
 
 export async function POST(req: Request) {
   const { move, gameId, index } = await req.json();
-
-  pusherServer.trigger(gameId, "incoming-moves", move);
-
   const playgruond = await db.ticTacToePlayGround.findFirst({
     where: {
       id: gameId,

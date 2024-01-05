@@ -1,11 +1,11 @@
 "use client";
 
-import { cellState } from "@/actions/cellState";
-import Cell from "../Cell";
-import { currentUser } from "@/lib/auth";
-import { getBoard } from "@/actions/getBoard";
 import { useEffect, useState } from "react";
-import { pusherClient } from "@/pusher";
+import { io } from "socket.io-client";
+import { Button } from "../ui/button";
+import { useSocket } from "../providers/SocketProvider";
+import { Input } from "../ui/input";
+import { cellState } from "@/actions/cellState";
 
 interface Props {
   currentStep: string;
@@ -14,37 +14,69 @@ interface Props {
 }
 
 export const GameBoard = ({ currentStep, gameId, board }: Props) => {
-  // const [incomingMoves, setIncomingMoves] = useState<string[]>([]);
-  const cells = ["", "", "", "", "", "", "", "", ""];
+  const [input, setInput] = useState("");
+  const [socket, setSocket] = useState<any>(undefined);
+  const [message, setMessage] = useState("");
+  const [buttonCont, setButtonCont] = useState([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
 
-  // useEffect(() => {
-  //   pusherClient.subscribe(gameId);
+  useEffect(() => {
+    const socket = io("http://localhost:3000");
 
-  //   pusherClient.bind("incoming-moves", (move: string, index: number) => {
-  //     setIncomingMoves((prev) => [...prev, move]);
-  //   });
+    socket.on("connect", () => {
+      console.log("connected");
+    });
 
-  //   return () => {
-  //     pusherClient.unsubscribe(gameId);
-  //   };
-  // });
+    socket.on("message", (data: string[]) => {
+      setButtonCont(data);
+    });
+
+    setSocket(socket);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const sendSocketEvent = async (index: number, symbol: string) => {
+    const newArray = [...buttonCont];
+    newArray[index] = symbol;
+
+    socket.emit("message", newArray);
+
+    await cellState(index, symbol, gameId);
+  };
 
   return (
     <div
       className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
     >
-      <div className="grid grid-cols-3">
-        {cells.map((cell, index) => {
+      <div className="grid grid-cols-3 gap-4">
+        {buttonCont.map((cell, index) => {
           return (
-            <Cell
-              key={index}
-              gameId={gameId}
-              index={index}
-              cell={cell}
-              currentStep={currentStep}
-              board={board}
-              // incomingMoves={incomingMoves}
-            />
+            <>
+              {/* <Cell
+                key={index}
+                gameId={gameId}
+                index={index}
+                cell={cell}
+                currentStep={currentStep}
+                board={board}
+                // incomingMoves={incomingMoves}
+              /> */}
+              <Button key={index} onClick={() => sendSocketEvent(index, "X")}>
+                {board && (board[index] === "-" ? cell : board[index])}
+              </Button>
+            </>
           );
         })}
       </div>
