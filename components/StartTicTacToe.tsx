@@ -53,7 +53,7 @@ const TicTacToePlayGround = ({ playGroundId, inviteCode }: Props) => {
   };
 
   return (
-    <Tabs defaultValue="link" className="w-[400px]">
+    <Tabs defaultValue="link" className="w-[400px] mt-6">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="link">Присоединиться</TabsTrigger>
         <TabsTrigger value="make">Создать комнату</TabsTrigger>

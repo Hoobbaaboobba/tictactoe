@@ -60,7 +60,7 @@ export const GameBoard = ({ currentStep, gameId, board }: Props) => {
     <div
       className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
     >
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3">
         {buttonCont.map((cell, index) => {
           return (
             <>
@@ -73,9 +73,13 @@ export const GameBoard = ({ currentStep, gameId, board }: Props) => {
                 board={board}
                 // incomingMoves={incomingMoves}
               /> */}
-              <Button key={index} onClick={() => sendSocketEvent(index, "X")}>
+              <button
+                key={index}
+                onClick={() => sendSocketEvent(index, "X")}
+                className={`w-16 h-16 border dark:border-white border-black flex justify-center items-center text-4xl`}
+              >
                 {board && (board[index] === "-" ? cell : board[index])}
-              </Button>
+              </button>
             </>
           );
         })}
