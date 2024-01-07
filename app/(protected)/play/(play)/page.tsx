@@ -12,19 +12,28 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Image from "next/image";
+import ArcadeDrawer from "../arcade/components/ArcadeDrawer";
+import { getTicTacToePlaygrounds } from "@/actions/getBoard";
 
 export default async function PlayPage() {
   const user = await currentUser();
 
   const playgruond = await db.ticTacToePlayGround.findFirst({
     where: {
-      players: {
-        some: {
-          userId: user?.id,
-        },
-      },
+      userId: user?.id,
     },
   });
+
+  const players = await db.ticTacToePlayGround.findFirst({
+    where: {
+      userId: user?.id,
+    },
+    select: {
+      players: true,
+    },
+  });
+
+  const playgrounds = await getTicTacToePlaygrounds();
 
   return (
     <div className="flex flex-col justify-center items-center gap-4">
@@ -33,7 +42,7 @@ export default async function PlayPage() {
           <Card className="w-[400px] group h-[200px] relative hover:border-yellow-400 transition">
             <CardContent className="flex justify-center items-center">
               <Image
-                src={require("../../../public/rick-bg.png")}
+                src={require("../../../../public/rick-bg.png")}
                 alt="rick and morty background"
                 fill
                 placeholder="blur"
@@ -48,15 +57,16 @@ export default async function PlayPage() {
             </CardFooter>
           </Card>
         </DrawerTrigger>
-        <DrawerContent className="w-full h-[85%] flex justify-start items-center">
+        <DrawerContent className="w-full h-[95%] flex justify-start items-center">
           <TicTacToePlayGround
             playGroundId={playgruond?.id || null}
             inviteCode={playgruond?.inviteCode}
+            players={players?.players}
+            playgrounds={playgrounds}
           />
         </DrawerContent>
       </Drawer>
-      <Skeleton className="w-[400px] h-[200px]" />
-      <Skeleton className="w-[400px] h-[200px]" />
+      <ArcadeDrawer />
     </div>
   );
 }

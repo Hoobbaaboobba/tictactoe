@@ -29,8 +29,20 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
     },
   });
 
+  const existingTicTacToeGame = await db.ticTacToePlayGround.findFirst({
+    where: {
+      id: params.gameId,
+    },
+  });
+
+  const board = existingTicTacToeGame?.board.split("");
+
   return (
-    <GameFiled players={ticTacToeGamePlayers?.players} gameId={params.gameId} />
+    <GameFiled
+      players={ticTacToeGamePlayers?.players}
+      gameId={params.gameId}
+      board={board}
+    />
   );
 };
 

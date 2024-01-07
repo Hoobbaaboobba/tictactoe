@@ -30,7 +30,7 @@ export const GameBoard = ({ currentStep, gameId, board }: Props) => {
   ]);
 
   useEffect(() => {
-    const socket = io("http://localhost:3000");
+    const socket = io("http://localhost:3001");
 
     socket.on("connect", () => {
       console.log("connected");

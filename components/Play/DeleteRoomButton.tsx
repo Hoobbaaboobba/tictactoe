@@ -27,7 +27,7 @@ const DeleteRoomButton = ({ gameId }: Props) => {
         {isPending ? (
           <ScaleLoader color="#ffffff" height={20} width={4} />
         ) : (
-          "Покинуть комнату"
+          "Удалить комнату"
         )}
       </Button>
     </form>

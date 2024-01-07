@@ -1,44 +1,74 @@
+"use client";
+
 import PlayersField from "@/components/PlayersField";
 import { redirect } from "next/navigation";
 import { GameBoard } from "./GameBoard";
 import DeleteRoomButton from "./DeleteRoomButton";
-import { db } from "@/lib/db";
+import { useEffect, useState, useTransition } from "react";
+import { io } from "socket.io-client";
+import { Player } from "@prisma/client";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { getPlayers } from "@/actions/getPlayers";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import LeaveRoomButton from "./LeaveRoomButton";
+import { ScaleLoader } from "react-spinners";
 
 interface Props {
-  players:
-    | {
-        id: string;
-        symbol: string;
-        name: string | null;
-        image: string | null;
-        points: number | null;
-        role: "GOD" | "ADMIN" | "PLAYER";
-        userId: string;
-        playGroundId: string;
-        createdAt: Date;
-        updatedAt: Date;
-      }[]
-    | undefined;
+  players: Player[] | undefined;
   gameId: string;
+  board: string[] | undefined;
 }
 
-export const GameFiled = async ({ players, gameId }: Props) => {
-  if (players === undefined) {
-    return redirect("/play");
-  }
+export const GameFiled = ({ players, gameId, board }: Props) => {
+  const [socket, setSocket] = useState<any>(undefined);
+  const [dialog, setDialog] = useState(true);
+  const [playersData, setPlayersData] = useState<Player[] | undefined>();
+  const [isPending, startTransition] = useTransition();
 
-  const existingTicTacToeGame = await db.ticTacToePlayGround.findFirst({
-    where: {
-      id: gameId,
-    },
-  });
+  const user = useCurrentUser();
 
-  const board = existingTicTacToeGame?.board.split("");
+  useEffect(() => {
+    const socket = io("http://localhost:3001");
+
+    setPlayersData(players);
+
+    socket.on("connect", () => {
+      console.log("connected");
+    });
+
+    socket.on("enter", (data: Player[] | undefined) => {
+      setPlayersData(data);
+    });
+
+    setSocket(socket);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  const reloadPlayers = async () => {
+    startTransition(async () => {
+      const data = await getPlayers(gameId);
+
+      socket.emit("enter", data);
+
+      setDialog(false);
+    });
+  };
 
   return (
     <div className="w-full flex flex-col gap-4 justify-center items-center overflow-y-auto">
-      <PlayersField players={players} />
-      {players[1] && (
+      <PlayersField players={playersData} />
+      {playersData && playersData[1] && (
         <>
           {/* <GameInfo
             isDraw={isDraw}
@@ -56,7 +86,41 @@ export const GameFiled = async ({ players, gameId }: Props) => {
           /> */}
         </>
       )}
-      <DeleteRoomButton gameId={gameId} />
+      {playersData && playersData[1]?.userId === user?.id ? (
+        <Button
+          type="submit"
+          onClick={reloadPlayers}
+          variant="destructive"
+          className="w-[300px]"
+        >
+          {isPending ? (
+            <ScaleLoader color="#000000" height={20} width={4} />
+          ) : (
+            "Удалить комнату"
+          )}
+        </Button>
+      ) : (
+        <DeleteRoomButton gameId={gameId} />
+      )}
+      {playersData && playersData[1]?.userId === user?.id ? (
+        <Dialog open={dialog}>
+          <DialogContent className="w-[400px]">
+            <DialogHeader>
+              <DialogTitle className="text-3xl">Вступить в игру?</DialogTitle>
+              <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
+                <Button onClick={reloadPlayers}>
+                  {isPending ? (
+                    <ScaleLoader color="#000000" height={20} width={4} />
+                  ) : (
+                    "Да"
+                  )}
+                </Button>
+                <Button variant="outline">Наблюдать</Button>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      ) : null}
     </div>
   );
 };

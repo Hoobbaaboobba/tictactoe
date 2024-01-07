@@ -27,16 +27,21 @@ body {
   animation: 1s infinite alternate redAn;
 }
 
-/* .cl-userButtonPopoverCard {
-  border-radius: 10px;
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+.active {
+  position: relative;
+  z-index: 10;
 }
 
-.cl-userButtonPopoverActionButton:hover {
-  background: #000;
-  color: white;
-} */
+.active::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  width: 101px;
+  height: 93px;
+  border: 2px solid #facc15;
+  border-radius: 8px;
+}
 
 @keyframes redAn {
   0% {

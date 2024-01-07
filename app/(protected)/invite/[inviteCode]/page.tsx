@@ -19,17 +19,17 @@ const InvitePage = async ({ params }: Props) => {
     return redirect("/play");
   }
 
-  const amountOfPlayes = await db.ticTacToePlayGround.findFirst({
+  const amountOfPlayes = await db.ticTacToePlayGround.findMany({
     where: {
-      id: user.id,
+      inviteCode: params.inviteCode,
     },
     select: {
       players: true,
     },
   });
 
-  if (amountOfPlayes?.players) {
-    if (amountOfPlayes.players.length > 2) {
+  if (amountOfPlayes.length) {
+    if (amountOfPlayes.length > 2) {
       return redirect("/play");
     }
   }
