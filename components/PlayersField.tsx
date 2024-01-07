@@ -12,7 +12,7 @@ interface Props {
 
 const PlayersField = ({ players }: Props) => {
   if (players === undefined) {
-    return;
+    return redirect("/play");
   }
 
   return (

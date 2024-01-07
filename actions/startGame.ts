@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const startGame = async () => {
   try {
@@ -66,13 +67,13 @@ export const exitGame = async (gameId: string) => {
       },
     });
 
-    revalidatePath(`/play/${gameId}`);
+    return redirect(`/play`);
   } catch {
     return { error: "Что-то пошло не так!" };
   }
 };
 
-export const leaveRoom = async (gameId: string) => {
+export const leaveRoom = async (gameId: string, userId?: string) => {
   try {
     const user = currentUser();
 
@@ -80,16 +81,18 @@ export const leaveRoom = async (gameId: string) => {
       return null;
     }
 
-    const players = await db.ticTacToePlayGround.findFirst({
+    await db.ticTacToePlayGround.delete({
       where: {
         id: gameId,
-      },
-      select: {
-        players: true,
+        players: {
+          some: {
+            userId: userId,
+          },
+        },
       },
     });
 
-    return players?.players;
+    return redirect("/play");
   } catch {
     return { error: "Что-то пошло не так!" };
   }

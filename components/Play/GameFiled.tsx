@@ -20,7 +20,7 @@ import { getPlayers } from "@/actions/getPlayers";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import LeaveRoomButton from "./LeaveRoomButton";
 import { ScaleLoader } from "react-spinners";
-import { exitGame } from "@/actions/startGame";
+import { exitGame, leaveRoom } from "@/actions/startGame";
 
 interface Props {
   players: Player[] | undefined;
@@ -66,9 +66,21 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     });
   };
 
-  const onDeleteRoom = () => {
+  const onLeaveRoom = async () => {
+    startTransition(async () => {
+      if (playersData) {
+        await leaveRoom(gameId, playersData[1].userId);
+        reloadPlayers();
+        redirect("/play");
+      }
+    });
+  };
+
+  const onDeleteRoom = async () => {
     startTransition(async () => {
       await exitGame(gameId);
+      reloadPlayers();
+      redirect("/play");
     });
   };
 
@@ -94,10 +106,25 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
         </>
       )}
       {playersData && playersData[1]?.userId === user?.id ? (
+        <form action={onLeaveRoom}>
+          <Button
+            type="submit"
+            onClick={onLeaveRoom}
+            variant="destructive"
+            className="w-[300px]"
+          >
+            {isPending ? (
+              <ScaleLoader color="#ffffff" height={20} width={4} />
+            ) : (
+              "Покинуть комнату"
+            )}
+          </Button>
+        </form>
+      ) : (
         <form action={onDeleteRoom}>
           <Button
             type="submit"
-            onClick={reloadPlayers}
+            onClick={onDeleteRoom}
             variant="destructive"
             className="w-[300px]"
           >
@@ -108,8 +135,6 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
             )}
           </Button>
         </form>
-      ) : (
-        <DeleteRoomButton gameId={gameId} />
       )}
       {playersData && playersData[1]?.userId === user?.id ? (
         <Dialog open={dialog}>
