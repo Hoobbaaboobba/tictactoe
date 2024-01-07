@@ -20,6 +20,7 @@ import { getPlayers } from "@/actions/getPlayers";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import LeaveRoomButton from "./LeaveRoomButton";
 import { ScaleLoader } from "react-spinners";
+import { exitGame } from "@/actions/startGame";
 
 interface Props {
   players: Player[] | undefined;
@@ -65,6 +66,12 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     });
   };
 
+  const onDeleteRoom = () => {
+    startTransition(async () => {
+      await exitGame(gameId);
+    });
+  };
+
   return (
     <div className="w-full flex flex-col gap-4 justify-center items-center overflow-y-auto">
       <PlayersField players={playersData} />
@@ -87,18 +94,20 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
         </>
       )}
       {playersData && playersData[1]?.userId === user?.id ? (
-        <Button
-          type="submit"
-          onClick={reloadPlayers}
-          variant="destructive"
-          className="w-[300px]"
-        >
-          {isPending ? (
-            <ScaleLoader color="#000000" height={20} width={4} />
-          ) : (
-            "Удалить комнату"
-          )}
-        </Button>
+        <form action={onDeleteRoom}>
+          <Button
+            type="submit"
+            onClick={reloadPlayers}
+            variant="destructive"
+            className="w-[300px]"
+          >
+            {isPending ? (
+              <ScaleLoader color="#ffffff" height={20} width={4} />
+            ) : (
+              "Удалить комнату"
+            )}
+          </Button>
+        </form>
       ) : (
         <DeleteRoomButton gameId={gameId} />
       )}

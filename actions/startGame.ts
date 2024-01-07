@@ -71,3 +71,26 @@ export const exitGame = async (gameId: string) => {
     return { error: "Что-то пошло не так!" };
   }
 };
+
+export const leaveRoom = async (gameId: string) => {
+  try {
+    const user = currentUser();
+
+    if (!user) {
+      return null;
+    }
+
+    const players = await db.ticTacToePlayGround.findFirst({
+      where: {
+        id: gameId,
+      },
+      select: {
+        players: true,
+      },
+    });
+
+    return players?.players;
+  } catch {
+    return { error: "Что-то пошло не так!" };
+  }
+};
