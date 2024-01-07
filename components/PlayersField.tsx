@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { redirect } from "next/navigation";
 import { ScaleLoader } from "react-spinners";
 import { Crown, GraduationCap } from "lucide-react";
-import { io } from "socket.io-client";
 import { Player } from "@prisma/client";
 
 interface Props {
@@ -12,7 +10,7 @@ interface Props {
 
 const PlayersField = ({ players }: Props) => {
   if (players === undefined) {
-    return redirect("/play");
+    return;
   }
 
   return (
