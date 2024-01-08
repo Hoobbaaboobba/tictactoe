@@ -17,6 +17,7 @@ const SocketHandler = (req, res) => {
       });
     });
   }
+
   res.end();
 };
 
