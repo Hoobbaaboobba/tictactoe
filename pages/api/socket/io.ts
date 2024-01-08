@@ -25,11 +25,11 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       socket.on("enter", (data) => {
         io.emit("enter", data);
       });
-      socket.on("enter", (data) => {
-        io.emit("enter", data);
-      });
       socket.on("message", (data) => {
         io.emit("message", data);
+      });
+      socket.on("step", (data) => {
+        io.emit("step", data);
       });
     });
   }

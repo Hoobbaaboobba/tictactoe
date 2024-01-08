@@ -36,7 +36,7 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
   const [dialog, setDialog] = useState(true);
   const [playersData, setPlayersData] = useState<Player[] | undefined>();
   const [isPending, startTransition] = useTransition();
-  const [currentStep, setCurrentStep] = useState<"O" | "X">("O");
+  const [currentStep, setCurrentStep] = useState<string>("O");
 
   const [buttonCont, setButtonCont] = useState([
     "",
@@ -69,7 +69,7 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
       setPlayersData(data);
     });
 
-    socket.on("step", (data: "O" | "X") => {
+    socket.on("step", (data: string) => {
       setCurrentStep(data);
     });
 
@@ -168,23 +168,17 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     const newArray = [...buttonCont];
     newArray[index] = symbol;
 
-    if (
-      newArray.join("").length === 1 ||
-      newArray.join("").length === 3 ||
-      newArray.join("").length === 5 ||
-      newArray.join("").length === 7 ||
-      newArray.join("").length === 9
-    ) {
-      setCurrentStep("X");
-    } else {
-      setCurrentStep("O");
-    }
-
     socket.emit("message", newArray);
 
-    socket.emit("step", currentStep);
-
+    if (symbol === "O") {
+      setCurrentStep("X");
+    }
+    if (symbol === "X") {
+      setCurrentStep("O");
+    }
     await cellState(index, symbol, gameId);
+
+    socket.emit("step", currentStep);
   };
 
   return (
@@ -196,7 +190,7 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
           <div
             className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
           >
-            {renderOverlay()}
+            {/* {renderOverlay()} */}
             <div className="grid grid-cols-3">
               {buttonCont.map((cell, index) => {
                 return (
