@@ -21,6 +21,7 @@ import { useCurrentUser } from "@/hooks/useCurrentUser";
 import LeaveRoomButton from "./LeaveRoomButton";
 import { ScaleLoader } from "react-spinners";
 import { exitGame, leaveRoom } from "@/actions/startGame";
+import GameInfo from "../GameInfo";
 
 interface Props {
   players: Player[] | undefined;
@@ -28,16 +29,24 @@ interface Props {
   board: string[] | undefined;
 }
 
+let socket: any = undefined;
+
 export const GameFiled = ({ players, gameId, board }: Props) => {
-  const [socket, setSocket] = useState<any>(undefined);
+  // const [socket, setSocket] = useState<any>(undefined);
   const [dialog, setDialog] = useState(true);
   const [playersData, setPlayersData] = useState<Player[] | undefined>();
   const [isPending, startTransition] = useTransition();
+  const [currentStep, setCurrentStep] = useState("O");
 
   const user = useCurrentUser();
 
   useEffect(() => {
-    const socket = io("http://localhost:3001");
+    socketInitializer();
+  }, []);
+
+  const socketInitializer = async () => {
+    await fetch("/api/socket");
+    socket = io();
 
     setPlayersData(players);
 
@@ -49,12 +58,10 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
       setPlayersData(data);
     });
 
-    setSocket(socket);
-
     return () => {
       socket.disconnect();
     };
-  }, []);
+  };
 
   const reloadPlayers = async () => {
     startTransition(async () => {
@@ -84,20 +91,46 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     });
   };
 
+  const renderDialog = () => {
+    if (!playersData) {
+      return null;
+    }
+
+    if (playersData[1]?.userId === user?.id) {
+      return (
+        <Dialog open={dialog}>
+          <DialogContent className="w-[400px]">
+            <DialogHeader>
+              <DialogTitle className="text-3xl">Вступить в игру?</DialogTitle>
+              <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
+                <Button onClick={reloadPlayers}>
+                  {isPending ? (
+                    <ScaleLoader color="#000000" height={20} width={4} />
+                  ) : (
+                    "Да"
+                  )}
+                </Button>
+                <Button variant="outline">Наблюдать</Button>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+      );
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-4 justify-center items-center overflow-y-auto">
       <PlayersField players={playersData} />
       {playersData && playersData[1] && (
         <>
-          {/* <GameInfo
-            isDraw={isDraw}
-            renderSymbol={renderSymbol}
-            winnerSequence={winnerSequence}
-            Symbol_o={SYMBOL_O}
+          <GameInfo currentStep={currentStep} />
+          <GameBoard
+            players={playersData}
             currentStep={currentStep}
-            winnerSymbol={winnerSymbol}
-          /> */}
-          <GameBoard currentStep={"X"} gameId={gameId} board={board} />
+            gameId={gameId}
+            board={board}
+          />
           {/* <ResetButton
             winnerSequence={winnerSequence}
             isDraw={isDraw}
@@ -136,25 +169,7 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
           </Button>
         </form>
       )}
-      {playersData && playersData[1]?.userId === user?.id ? (
-        <Dialog open={dialog}>
-          <DialogContent className="w-[400px]">
-            <DialogHeader>
-              <DialogTitle className="text-3xl">Вступить в игру?</DialogTitle>
-              <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
-                <Button onClick={reloadPlayers}>
-                  {isPending ? (
-                    <ScaleLoader color="#000000" height={20} width={4} />
-                  ) : (
-                    "Да"
-                  )}
-                </Button>
-                <Button variant="outline">Наблюдать</Button>
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      ) : null}
+      {renderDialog()}
     </div>
   );
 };

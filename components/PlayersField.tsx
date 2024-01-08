@@ -36,8 +36,8 @@ const PlayersField = ({ players }: Props) => {
             </p>
           </div>
         </div>
-        <div className="w-8 h-8 flex justify-center items-center text-green-600">
-          {}
+        <div className="w-8 h-8 flex justify-center items-center font-semibold text-lg text-green-600">
+          {players[0]?.symbol}
         </div>
       </div>
       <div className="text-3xl font-bold">VS</div>
@@ -64,8 +64,8 @@ const PlayersField = ({ players }: Props) => {
                 </p>
               </div>
             </div>
-            <div className="w-8 h-8 flex justify-center items-center text-rose-600">
-              {}
+            <div className="w-8 h-8 flex justify-center items-center font-semibold text-lg text-rose-600">
+              {players[1]?.symbol}
             </div>
           </>
         ) : (
