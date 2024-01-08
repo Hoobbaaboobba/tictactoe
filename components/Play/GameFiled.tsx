@@ -2,8 +2,6 @@
 
 import PlayersField from "@/components/PlayersField";
 import { redirect } from "next/navigation";
-import { GameBoard } from "./GameBoard";
-import DeleteRoomButton from "./DeleteRoomButton";
 import { useEffect, useState, useTransition } from "react";
 import { io } from "socket.io-client";
 import { Player } from "@prisma/client";
@@ -24,6 +22,7 @@ import { exitGame, leaveRoom } from "@/actions/startGame";
 import GameInfo from "../GameInfo";
 import { useSocket } from "../providers/SocketProvider";
 import { cellState } from "@/actions/cellState";
+import WinnderDialog from "./WinnderDialog";
 
 interface Props {
   players: Player[] | undefined;
@@ -70,7 +69,11 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     });
 
     socket.on("step", (data: string) => {
-      setCurrentStep(data);
+      if (data === "O") {
+        setCurrentStep("X");
+      } else {
+        setCurrentStep("O");
+      }
     });
 
     socket.on("message", (data: string[]) => {
@@ -170,15 +173,8 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
 
     socket.emit("message", newArray);
 
-    if (symbol === "O") {
-      setCurrentStep("X");
-    }
-    if (symbol === "X") {
-      setCurrentStep("O");
-    }
-    await cellState(index, symbol, gameId);
-
     socket.emit("step", currentStep);
+    await cellState(index, symbol, gameId);
   };
 
   return (
@@ -190,7 +186,7 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
           <div
             className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
           >
-            {/* {renderOverlay()} */}
+            {renderOverlay()}
             <div className="grid grid-cols-3">
               {buttonCont.map((cell, index) => {
                 return (
@@ -244,6 +240,7 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
         </form>
       )}
       {renderDialog()}
+      <WinnderDialog board={board} players={playersData} gameId={gameId} />
     </div>
   );
 };

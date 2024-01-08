@@ -35,6 +35,10 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
     },
   });
 
+  if (!existingTicTacToeGame) {
+    return redirect("/play");
+  }
+
   const board = existingTicTacToeGame?.board.split("");
 
   return (

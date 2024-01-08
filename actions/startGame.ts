@@ -50,11 +50,7 @@ export const exitGame = async (gameId: string) => {
 
     const playgruond = await db.ticTacToePlayGround.findFirst({
       where: {
-        players: {
-          some: {
-            userId: user?.id,
-          },
-        },
+        id: gameId,
       },
     });
 
@@ -62,12 +58,9 @@ export const exitGame = async (gameId: string) => {
       where: {
         id: playgruond?.id,
       },
-      select: {
-        players: true,
-      },
     });
 
-    return redirect(`/play`);
+    return revalidatePath(`/play/${gameId}`);
   } catch {
     return { error: "Что-то пошло не так!" };
   }

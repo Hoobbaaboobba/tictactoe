@@ -60,7 +60,7 @@ const PlayersField = ({ players }: Props) => {
               <div className="">
                 <h1 className="text-lg dots font-bold">{players[1]?.name}</h1>
                 <p className="opacity-50 text-sm">
-                  Рейтинг: <span>2</span>
+                  Рейтинг: <span>{players[1].points}</span>
                 </p>
               </div>
             </div>

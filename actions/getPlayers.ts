@@ -25,3 +25,24 @@ export const getPlayers = async (gameid: string) => {
     return { error: "Что-то пошло не так!" };
   }
 };
+
+export const givePoints = async (playerId: string, currentCoins: number) => {
+  try {
+    const user = currentUser();
+
+    if (!user) {
+      return null;
+    }
+
+    await db.user.update({
+      where: {
+        id: playerId,
+      },
+      data: {
+        points: currentCoins + 10,
+      },
+    });
+  } catch {
+    return { error: "Что-то пошло не так!" };
+  }
+};
