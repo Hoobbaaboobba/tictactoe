@@ -37,6 +37,10 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
   const [isPending, startTransition] = useTransition();
   const [currentStep, setCurrentStep] = useState<string>("O");
 
+  const [isEnd, setIsEnd] = useState(false);
+
+  const [winner, setWinner] = useState("");
+
   const [buttonCont, setButtonCont] = useState([
     "",
     "",
@@ -121,7 +125,7 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     if (playersData[1]?.userId === user?.id) {
       return (
         <Dialog open={dialog}>
-          <DialogContent className="w-[400px]">
+          <DialogContent className="w-[400px] rounded-md">
             <DialogHeader>
               <DialogTitle className="text-3xl">Вступить в игру?</DialogTitle>
               <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
@@ -170,6 +174,35 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
   const sendSocketEvent = async (index: number, symbol: string) => {
     const newArray = [...buttonCont];
     newArray[index] = symbol;
+
+    if (
+      (newArray[0] && newArray[1] && newArray[2] === "O") ||
+      (newArray[3] && newArray[4] && newArray[5] === "O") ||
+      (newArray[6] && newArray[7] && newArray[8] === "O") ||
+      (newArray[0] && newArray[3] && newArray[6] === "O") ||
+      (newArray[1] && newArray[4] && newArray[7] === "O") ||
+      (newArray[2] && newArray[5] && newArray[8] === "O")
+    ) {
+      setIsEnd(true);
+      setWinner("O");
+    }
+
+    if (
+      (newArray[0] && newArray[1] && newArray[2] === "X") ||
+      (newArray[3] && newArray[4] && newArray[5] === "X") ||
+      (newArray[6] && newArray[7] && newArray[8] === "X") ||
+      (newArray[0] && newArray[3] && newArray[6] === "X") ||
+      (newArray[1] && newArray[4] && newArray[7] === "X") ||
+      (newArray[2] && newArray[5] && newArray[8] === "X")
+    ) {
+      setIsEnd(true);
+      setWinner("X");
+    }
+
+    if (newArray.join("").length === 9) {
+      setIsEnd(true);
+      setWinner("draw");
+    }
 
     socket.emit("message", newArray);
 
@@ -240,7 +273,9 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
         </form>
       )}
       {renderDialog()}
-      <WinnderDialog board={board} players={playersData} gameId={gameId} />
+      {isEnd && (
+        <WinnderDialog winner={winner} players={playersData} gameId={gameId} />
+      )}
     </div>
   );
 };
