@@ -62,7 +62,7 @@ export const GameBoard = ({ currentStep, gameId, board, players }: Props) => {
     if (players && user) {
       if (
         (players[0].userId === user.id && players[0].symbol !== currentStep) ||
-        (players[1].userId === user.id && players[1].symbol !== currentStep)
+        (players[1]?.userId === user.id && players[1]?.symbol !== currentStep)
       ) {
         return (
           <div
@@ -88,20 +88,11 @@ export const GameBoard = ({ currentStep, gameId, board, players }: Props) => {
     <div
       className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
     >
-      {renderOverlay()}
+      {/* {renderOverlay()} */}
       <div className="grid grid-cols-3">
         {buttonCont.map((cell, index) => {
           return (
             <>
-              {/* <Cell
-                key={index}
-                gameId={gameId}
-                index={index}
-                cell={cell}
-                currentStep={currentStep}
-                board={board}
-                // incomingMoves={incomingMoves}
-              /> */}
               <button
                 key={index}
                 onClick={() => sendSocketEvent(index, currentStep)}
