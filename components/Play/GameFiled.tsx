@@ -22,14 +22,13 @@ import LeaveRoomButton from "./LeaveRoomButton";
 import { ScaleLoader } from "react-spinners";
 import { exitGame, leaveRoom } from "@/actions/startGame";
 import GameInfo from "../GameInfo";
+import { useSocket } from "../providers/SocketProvider";
 
 interface Props {
   players: Player[] | undefined;
   gameId: string;
   board: string[] | undefined;
 }
-
-let socket: any = undefined;
 
 export const GameFiled = ({ players, gameId, board }: Props) => {
   // const [socket, setSocket] = useState<any>(undefined);
@@ -40,14 +39,13 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
 
   const user = useCurrentUser();
 
+  const { socket } = useSocket();
+
   useEffect(() => {
     socketInitializer();
   }, []);
 
   const socketInitializer = async () => {
-    await fetch("/api/socket");
-    socket = io();
-
     setPlayersData(players);
 
     socket.on("connect", () => {

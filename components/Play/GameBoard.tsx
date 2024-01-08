@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { Button } from "../ui/button";
 import { useSocket } from "../providers/SocketProvider";
-import { Input } from "../ui/input";
 import { cellState } from "@/actions/cellState";
 import { Player } from "@prisma/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
@@ -17,12 +14,7 @@ interface Props {
   players: Player[] | undefined;
 }
 
-let socket: any;
-
 export const GameBoard = ({ currentStep, gameId, board, players }: Props) => {
-  const [input, setInput] = useState("");
-  // const [socket, setSocket] = useState<any>(undefined);
-  const [message, setMessage] = useState("");
   const [buttonCont, setButtonCont] = useState([
     "",
     "",
@@ -37,14 +29,13 @@ export const GameBoard = ({ currentStep, gameId, board, players }: Props) => {
 
   const user = useCurrentUser();
 
+  const { socket } = useSocket();
+
   useEffect(() => {
     socketInitializer();
   }, []);
 
   const socketInitializer = async () => {
-    await fetch("/api/socket");
-    socket = io();
-
     socket.on("connect", () => {
       console.log("connected");
     });
