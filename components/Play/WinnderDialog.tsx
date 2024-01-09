@@ -27,7 +27,8 @@ interface Props {
 }
 
 const WinnderDialog = ({ players, gameId, board }: Props) => {
-  const { isEnd, winner, minus, prise } = useWinnderDialog();
+  const { isEnd, winner, minus, prise, resetEnd, resetWinner } =
+    useWinnderDialog();
 
   if (players) {
     if (isEnd && winner === "O") {
@@ -41,6 +42,8 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
         exitGame(gameId);
 
         setTimeout(() => {
+          resetEnd();
+          resetWinner();
           revalidatePath(`/play/${gameId}`);
         }, 5000);
 
@@ -134,6 +137,8 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
       exitGame(gameId);
 
       setTimeout(() => {
+        resetEnd();
+        resetWinner();
         revalidatePath(`/play/${gameId}`);
       }, 5000);
 

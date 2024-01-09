@@ -6,10 +6,12 @@ type WinnderDialogStore = {
   onClose: () => void;
   isEnd: boolean;
   onEnd: () => void;
+  resetEnd: () => void;
   winner: string;
   onWinnerO: () => void;
   onWinnerX: () => void;
   onDraw: () => void;
+  resetWinner: () => void;
   prise: number;
   minus: number;
 };
@@ -30,9 +32,11 @@ const useWinnderDialog = create<WinnderDialogStore>((set) => ({
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
   onEnd: () => set({ isEnd: true }),
+  resetEnd: () => set({ isEnd: false }),
   onWinnerO: () => set({ winner: "O" }),
   onWinnerX: () => set({ winner: "X" }),
   onDraw: () => set({ winner: "draw" }),
+  resetWinner: () => set({ winner: "" }),
 }));
 
 export default useWinnderDialog;
