@@ -39,7 +39,7 @@ export const givePoints = async (playerId: string, currentCoins: number) => {
         id: playerId,
       },
       data: {
-        points: currentCoins + 10,
+        points: currentCoins,
       },
     });
   } catch {

@@ -23,7 +23,8 @@ interface Props {
 const WinnderDialog = async ({ winner, players, gameId }: Props) => {
   if (players) {
     if (winner === "O") {
-      await givePoints(players[0].userId, players[0].points || 0);
+      const pointsSum = (players[0].points || 0) + 10;
+      await givePoints(players[0].userId, pointsSum);
 
       return (
         <Dialog open>
@@ -68,7 +69,8 @@ const WinnderDialog = async ({ winner, players, gameId }: Props) => {
       );
     }
     if (winner === "X") {
-      await givePoints(players[1].userId, players[1].points || 0);
+      const pointsSum = (players[1].points || 0) + 10;
+      await givePoints(players[1].userId, pointsSum);
 
       return (
         <Dialog open>
