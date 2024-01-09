@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Dialog,
@@ -13,23 +15,35 @@ import { Crown, GraduationCap, TrophyIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { exitGame } from "@/actions/startGame";
 import DeleteRoomButton from "./DeleteRoomButton";
+import useWinnderDialog from "@/hooks/useWinnerDialog";
 
 interface Props {
-  winner: string;
   players: Player[] | undefined;
   gameId: string;
+  board: string[];
 }
 
-const WinnderDialog = async ({ winner, players, gameId }: Props) => {
+const WinnderDialog = ({ players, gameId, board }: Props) => {
+  const { isEnd, winner } = useWinnderDialog();
+
   const prise = (min: number, max: number): number => {
     return Math.random() * (max - min) + min;
   };
 
-  const randomPrise: number = prise(24, 34);
-  const randomMinus: number = prise(8, 15);
+  const randomPrise: number = parseInt(prise(24, 34).toFixed(0), 10);
+  const randomMinus: number = parseInt(prise(8, 15).toFixed(0), 10);
 
-  if (players) {
-    if (winner === "O") {
+  if (players && board) {
+    if (
+      (board[0] && board[1] && board[2]) === "O" ||
+      (board[3] && board[4] && board[5]) === "O" ||
+      (board[6] && board[7] && board[8]) === "O" ||
+      (board[0] && board[3] && board[6]) === "O" ||
+      (board[1] && board[4] && board[7]) === "O" ||
+      (board[2] && board[5] && board[8]) === "O" ||
+      (board[0] && board[4] && board[8]) === "O" ||
+      (board[2] && board[4] && board[6]) === "O"
+    ) {
       const pointsSum = players[0].points
         ? players[0].points + randomPrise
         : randomPrise;
@@ -37,8 +51,8 @@ const WinnderDialog = async ({ winner, players, gameId }: Props) => {
         ? players[1].points - randomMinus
         : 0;
 
-      await givePoints(players[0].userId, pointsSum);
-      await givePoints(players[1].userId, pointsMinus);
+      givePoints(players[0].userId, pointsSum);
+      givePoints(players[1].userId, pointsMinus);
 
       // setTimeout(() => {
       //   (async function () {
@@ -108,7 +122,8 @@ const WinnderDialog = async ({ winner, players, gameId }: Props) => {
                         <p>Рейтинг:</p>
                         <span className="flex gap-1 justify-center items-center text-yellow-500">
                           <p className="font-medium">
-                            {players[1]?.points} - {randomMinus}
+                            {players[1]?.points} -{" "}
+                            {players[1].points !== 0 ? randomMinus : 0}
                           </p>{" "}
                           <TrophyIcon className="w-4 h-4" />
                         </span>
@@ -123,7 +138,16 @@ const WinnderDialog = async ({ winner, players, gameId }: Props) => {
         </Dialog>
       );
     }
-    if (winner === "X") {
+    if (
+      (board[0] && board[1] && board[2]) === "X" ||
+      (board[3] && board[4] && board[5]) === "X" ||
+      (board[6] && board[7] && board[8]) === "X" ||
+      (board[0] && board[3] && board[6]) === "X" ||
+      (board[1] && board[4] && board[7]) === "X" ||
+      (board[2] && board[5] && board[8]) === "X" ||
+      (board[0] && board[4] && board[8]) === "X" ||
+      (board[2] && board[4] && board[6]) === "X"
+    ) {
       const pointsSum = players[1].points
         ? players[1].points + randomPrise
         : randomPrise;
@@ -131,8 +155,8 @@ const WinnderDialog = async ({ winner, players, gameId }: Props) => {
         ? players[0].points - randomMinus
         : 0;
 
-      await givePoints(players[1].userId, pointsSum);
-      await givePoints(players[0].userId, pointsMinus);
+      givePoints(players[1].userId, pointsSum);
+      givePoints(players[0].userId, pointsMinus);
 
       // setTimeout(() => {
       //   (async function () {
@@ -202,7 +226,8 @@ const WinnderDialog = async ({ winner, players, gameId }: Props) => {
                         <p>Рейтинг:</p>
                         <span className="flex gap-1 justify-center items-center text-yellow-500">
                           <p className="font-medium">
-                            {players[0]?.points} - {randomMinus}
+                            {players[0]?.points} -{" "}
+                            {players[0]?.points !== 0 ? randomMinus : 0}
                           </p>{" "}
                           <TrophyIcon className="w-4 h-4" />
                         </span>
@@ -217,27 +242,26 @@ const WinnderDialog = async ({ winner, players, gameId }: Props) => {
         </Dialog>
       );
     }
+    // } else {
+    //   // setTimeout(() => {
+    //   //   (async function () {
+    //   //     await exitGame(gameId);
+    //   //   });
+    //   // }, 10000);
 
-    if (winner === "draw") {
-      // setTimeout(() => {
-      //   (async function () {
-      //     await exitGame(gameId);
-      //   });
-      // }, 10000);
-
-      return (
-        <Dialog open>
-          <DialogContent className="w-[400px] rounded-md">
-            <DialogHeader>
-              <DialogTitle className="text-3xl">Ничья</DialogTitle>
-              <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
-                <DeleteRoomButton gameId={gameId} />
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      );
-    }
+    //   return (
+    //     <Dialog open>
+    //       <DialogContent className="w-[400px] rounded-md">
+    //         <DialogHeader>
+    //           <DialogTitle className="text-3xl">Ничья</DialogTitle>
+    //           <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
+    //             <DeleteRoomButton gameId={gameId} />
+    //           </DialogDescription>
+    //         </DialogHeader>
+    //       </DialogContent>
+    //     </Dialog>
+    //   );
+    // }
   }
 };
 

@@ -1,4 +1,5 @@
 import { GameFiled } from "@/components/Play/GameFiled";
+import WinnderDialog from "@/components/Play/WinnderDialog";
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
@@ -41,15 +42,22 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
 
   const board = existingTicTacToeGame?.board.split("");
 
-  const currentStep = existingTicTacToeGame.currentSymbol
+  const currentStep = existingTicTacToeGame.currentSymbol;
 
   return (
-    <GameFiled
-      players={ticTacToeGamePlayers?.players}
-      gameId={params.gameId}
-      board={board}
-      currentSymbol={currentStep}
-    />
+    <>
+      <GameFiled
+        players={ticTacToeGamePlayers?.players}
+        gameId={params.gameId}
+        board={board}
+        currentSymbol={currentStep}
+      />
+      <WinnderDialog
+        board={board}
+        players={ticTacToeGamePlayers?.players}
+        gameId={params.gameId}
+      />
+    </>
   );
 };
 

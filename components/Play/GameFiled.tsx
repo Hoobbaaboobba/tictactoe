@@ -25,6 +25,7 @@ import { cellState } from "@/actions/cellState";
 import WinnderDialog from "./WinnderDialog";
 import DeleteRoomButton from "./DeleteRoomButton";
 import { setStep } from "@/actions/setStep";
+import useWinnderDialog from "@/hooks/useWinnerDialog";
 
 interface Props {
   players: Player[] | undefined;
@@ -40,9 +41,7 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
   const [isPending, startTransition] = useTransition();
   const [currentStep, setCurrentStep] = useState<string>(currentSymbol);
 
-  const [isEnd, setIsEnd] = useState(false);
-
-  const [winner, setWinner] = useState("");
+  const { onEnd, onDraw, onWinnerO, onWinnerX } = useWinnderDialog();
 
   const [buttonCont, setButtonCont] = useState([
     "",
@@ -158,41 +157,6 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
     const newArray = [...buttonCont];
     newArray[index] = symbol;
 
-    if (board) {
-      if (
-        (board[0] && board[1] && board[2]) === "O" ||
-        (board[3] && board[4] && board[5]) === "O" ||
-        (board[6] && board[7] && board[8]) === "O" ||
-        (board[0] && board[3] && board[6]) === "O" ||
-        (board[1] && board[4] && board[7]) === "O" ||
-        (board[2] && board[5] && board[8]) === "O" ||
-        (board[0] && board[4] && board[8]) === "O" ||
-        (board[2] && board[4] && board[6]) === "O"
-      ) {
-        setIsEnd(true);
-        setWinner("O");
-      }
-
-      if (
-        (board[0] && board[1] && board[2]) === "X" ||
-        (board[3] && board[4] && board[5]) === "X" ||
-        (board[6] && board[7] && board[8]) === "X" ||
-        (board[0] && board[3] && board[6]) === "X" ||
-        (board[1] && board[4] && board[7]) === "X" ||
-        (board[2] && board[5] && board[8]) === "X" ||
-        (board[0] && board[4] && board[8]) === "X" ||
-        (board[2] && board[4] && board[6]) === "X"
-      ) {
-        setIsEnd(true);
-        setWinner("X");
-      }
-
-      if (board.filter((x) => x == "O").length === 5) {
-        setIsEnd(true);
-        setWinner("draw");
-      }
-    }
-
     socket.emit("message", newArray);
 
     socket.emit("step", currentStep);
@@ -238,9 +202,6 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
         <DeleteRoomButton gameId={gameId} />
       )}
       <RenderDialog />
-      {isEnd && (
-        <WinnderDialog winner={winner} players={playersData} gameId={gameId} />
-      )}
     </div>
   );
 };
