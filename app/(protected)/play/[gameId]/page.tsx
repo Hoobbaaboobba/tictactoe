@@ -41,11 +41,14 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
 
   const board = existingTicTacToeGame?.board.split("");
 
+  const currentStep = existingTicTacToeGame.currentSymbol
+
   return (
     <GameFiled
       players={ticTacToeGamePlayers?.players}
       gameId={params.gameId}
       board={board}
+      currentSymbol={currentStep}
     />
   );
 };

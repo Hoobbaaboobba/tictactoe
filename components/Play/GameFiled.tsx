@@ -23,19 +23,22 @@ import GameInfo from "../GameInfo";
 import { useSocket } from "../providers/SocketProvider";
 import { cellState } from "@/actions/cellState";
 import WinnderDialog from "./WinnderDialog";
+import DeleteRoomButton from "./DeleteRoomButton";
+import { setStep } from "@/actions/setStep";
 
 interface Props {
   players: Player[] | undefined;
   gameId: string;
   board: string[] | undefined;
+  currentSymbol: string;
 }
 
-export const GameFiled = ({ players, gameId, board }: Props) => {
+export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
   // const [socket, setSocket] = useState<any>(undefined);
-  const [dialog, setDialog] = useState(true);
-  const [playersData, setPlayersData] = useState<Player[] | undefined>();
+  const [dialog, setDialog] = useState<boolean>(true);
+  const [playersData, setPlayersData] = useState<Player[] | undefined>(players);
   const [isPending, startTransition] = useTransition();
-  const [currentStep, setCurrentStep] = useState<string>("O");
+  const [currentStep, setCurrentStep] = useState<string>(currentSymbol);
 
   const [isEnd, setIsEnd] = useState(false);
 
@@ -62,8 +65,6 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
   }, []);
 
   const socketInitializer = async () => {
-    setPlayersData(players);
-
     socket.on("connect", () => {
       console.log("connected");
     });
@@ -99,25 +100,33 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     });
   };
 
-  const onLeaveRoom = async () => {
-    startTransition(async () => {
-      if (playersData) {
-        await leaveRoom(gameId, playersData[1].userId);
-        reloadPlayers();
-        redirect("/play");
+  const RenderOverlay = () => {
+    if (players && user) {
+      if (
+        (players[0].userId === user.id && players[0].symbol !== currentStep) ||
+        (players[1]?.userId === user.id && players[1]?.symbol !== currentStep)
+      ) {
+        return (
+          <div
+            className={`absolute w-full h-full flex justify-center items-end rounded-xl top-0 left-0 bg-black/25 dark:bg-black/75`}
+          >
+            <div className="flex gap-2 my-2 justify-center items-center">
+              <span className="dark:block hidden">
+                <ScaleLoader color="#ffffff" height={20} width={4} />
+              </span>{" "}
+              <span className="dark:hidden block">
+                <ScaleLoader color="#000000" height={20} width={4} />
+              </span>
+            </div>
+          </div>
+        );
       }
-    });
+
+      return null;
+    }
   };
 
-  const onDeleteRoom = async () => {
-    startTransition(async () => {
-      await exitGame(gameId);
-      reloadPlayers();
-      redirect("/play");
-    });
-  };
-
-  const renderDialog = () => {
+  const RenderDialog = () => {
     if (!playersData) {
       return null;
     }
@@ -145,69 +154,51 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
     }
   };
 
-  const renderOverlay = () => {
-    if (players && user) {
-      if (
-        (players[0].userId === user.id && players[0].symbol !== currentStep) ||
-        (players[1]?.userId === user.id && players[1]?.symbol !== currentStep)
-      ) {
-        return (
-          <div
-            className={`absolute w-full h-full flex justify-center items-end rounded-xl top-0 left-0 bg-black/25 dark:bg-black/75`}
-          >
-            <div className="flex gap-2 my-2 justify-center items-center">
-              <span className="dark:block hidden">
-                <ScaleLoader color="#ffffff" height={20} width={4} />
-              </span>{" "}
-              <span className="dark:hidden block">
-                <ScaleLoader color="#000000" height={20} width={4} />
-              </span>
-            </div>
-          </div>
-        );
-      }
-
-      return null;
-    }
-  };
-
   const sendSocketEvent = async (index: number, symbol: string) => {
     const newArray = [...buttonCont];
     newArray[index] = symbol;
 
-    if (
-      (newArray[0] && newArray[1] && newArray[2] === "O") ||
-      (newArray[3] && newArray[4] && newArray[5] === "O") ||
-      (newArray[6] && newArray[7] && newArray[8] === "O") ||
-      (newArray[0] && newArray[3] && newArray[6] === "O") ||
-      (newArray[1] && newArray[4] && newArray[7] === "O") ||
-      (newArray[2] && newArray[5] && newArray[8] === "O")
-    ) {
-      setIsEnd(true);
-      setWinner("O");
-    }
+    if (board) {
+      if (
+        (board[0] && board[1] && board[2]) === "O" ||
+        (board[3] && board[4] && board[5]) === "O" ||
+        (board[6] && board[7] && board[8]) === "O" ||
+        (board[0] && board[3] && board[6]) === "O" ||
+        (board[1] && board[4] && board[7]) === "O" ||
+        (board[2] && board[5] && board[8]) === "O" ||
+        (board[0] && board[4] && board[8]) === "O" ||
+        (board[2] && board[4] && board[6]) === "O"
+      ) {
+        setIsEnd(true);
+        setWinner("O");
+      }
 
-    if (
-      (newArray[0] && newArray[1] && newArray[2] === "X") ||
-      (newArray[3] && newArray[4] && newArray[5] === "X") ||
-      (newArray[6] && newArray[7] && newArray[8] === "X") ||
-      (newArray[0] && newArray[3] && newArray[6] === "X") ||
-      (newArray[1] && newArray[4] && newArray[7] === "X") ||
-      (newArray[2] && newArray[5] && newArray[8] === "X")
-    ) {
-      setIsEnd(true);
-      setWinner("X");
-    }
+      if (
+        (board[0] && board[1] && board[2]) === "X" ||
+        (board[3] && board[4] && board[5]) === "X" ||
+        (board[6] && board[7] && board[8]) === "X" ||
+        (board[0] && board[3] && board[6]) === "X" ||
+        (board[1] && board[4] && board[7]) === "X" ||
+        (board[2] && board[5] && board[8]) === "X" ||
+        (board[0] && board[4] && board[8]) === "X" ||
+        (board[2] && board[4] && board[6]) === "X"
+      ) {
+        setIsEnd(true);
+        setWinner("X");
+      }
 
-    if (newArray.join("").length === 9) {
-      setIsEnd(true);
-      setWinner("draw");
+      if (board.filter((x) => x == "O").length === 5) {
+        setIsEnd(true);
+        setWinner("draw");
+      }
     }
 
     socket.emit("message", newArray);
 
     socket.emit("step", currentStep);
+
     await cellState(index, symbol, gameId);
+    await setStep(currentStep, gameId);
   };
 
   return (
@@ -215,11 +206,11 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
       <PlayersField players={playersData} />
       {playersData && playersData[1] && (
         <>
-          <GameInfo currentStep={currentStep} />
+          <GameInfo currentStep={currentSymbol} />
           <div
             className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
           >
-            {renderOverlay()}
+            <RenderOverlay />
             <div className="grid grid-cols-3">
               {buttonCont.map((cell, index) => {
                 return (
@@ -242,37 +233,11 @@ export const GameFiled = ({ players, gameId, board }: Props) => {
         </>
       )}
       {playersData && playersData[1]?.userId === user?.id ? (
-        <form action={onLeaveRoom}>
-          <Button
-            type="submit"
-            onClick={onLeaveRoom}
-            variant="destructive"
-            className="w-[300px]"
-          >
-            {isPending ? (
-              <ScaleLoader color="#ffffff" height={20} width={4} />
-            ) : (
-              "Покинуть комнату"
-            )}
-          </Button>
-        </form>
+        ""
       ) : (
-        <form action={onDeleteRoom}>
-          <Button
-            type="submit"
-            onClick={onDeleteRoom}
-            variant="destructive"
-            className="w-[300px]"
-          >
-            {isPending ? (
-              <ScaleLoader color="#ffffff" height={20} width={4} />
-            ) : (
-              "Удалить комнату"
-            )}
-          </Button>
-        </form>
+        <DeleteRoomButton gameId={gameId} />
       )}
-      {renderDialog()}
+      <RenderDialog />
       {isEnd && (
         <WinnderDialog winner={winner} players={playersData} gameId={gameId} />
       )}

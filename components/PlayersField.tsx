@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { redirect } from "next/navigation";
 import { ScaleLoader } from "react-spinners";
-import { Crown, GraduationCap } from "lucide-react";
+import { Crown, GraduationCap, TrophyIcon } from "lucide-react";
 import { Player } from "@prisma/client";
 
 interface Props {
@@ -31,9 +31,13 @@ const PlayersField = ({ players }: Props) => {
           </Avatar>
           <div className="">
             <h1 className="text-lg dots font-bold">{players[0]?.name}</h1>
-            <p className="opacity-50 text-sm">
-              Рейтинг: <span>{players[0]?.points}</span>
-            </p>
+            <div className="opacity-50 text-sm flex gap-1 justify-center items-center">
+              <p>Рейтинг:</p>
+              <span className="flex gap-1 justify-center items-center text-yellow-500">
+                <p className="font-medium">{players[0]?.points}</p>{" "}
+                <TrophyIcon className="w-4 h-4" />
+              </span>
+            </div>
           </div>
         </div>
         <div className="w-8 h-8 flex justify-center items-center font-semibold text-lg text-green-600">
@@ -59,9 +63,13 @@ const PlayersField = ({ players }: Props) => {
               </Avatar>
               <div className="">
                 <h1 className="text-lg dots font-bold">{players[1]?.name}</h1>
-                <p className="opacity-50 text-sm">
-                  Рейтинг: <span>{players[1].points}</span>
-                </p>
+                <div className="opacity-50 text-sm flex gap-1 justify-center items-center">
+                  <p>Рейтинг:</p>
+                  <span className="flex gap-1 justify-center items-center text-yellow-500">
+                    <p className="font-medium">{players[1]?.points}</p>{" "}
+                    <TrophyIcon className="w-4 h-4" />
+                  </span>
+                </div>
               </div>
             </div>
             <div className="w-8 h-8 flex justify-center items-center font-semibold text-lg text-rose-600">

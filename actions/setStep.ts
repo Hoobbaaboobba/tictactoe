@@ -4,11 +4,7 @@ import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
-export const cellState = async (
-  currentIndex: number,
-  currentSymbol: string,
-  gameId: string
-) => {
+export const setStep = async (currentSymbol: string, gameId: string) => {
   try {
     const user = await currentUser();
 
@@ -30,20 +26,16 @@ export const cellState = async (
       return null;
     }
 
-    let newBoard =
-      playgruond.board.slice(0, currentIndex) +
-      currentSymbol +
-      playgruond.board.slice(currentIndex + 1);
-
     const board = await db.ticTacToePlayGround.update({
       where: {
         id: playgruond.id,
       },
       data: {
-        board: newBoard,
+        currentSymbol: currentSymbol === "X" ? "O" : "X",
       },
     });
 
+    revalidatePath(`/play/${gameId}`);
     return board;
   } catch {
     return { error: "Что-то пошло не так!" };
