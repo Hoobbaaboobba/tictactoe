@@ -9,13 +9,16 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { Player } from "@prisma/client";
-import { givePoints } from "@/actions/getPlayers";
+import { decrementPoints, incrementPoints } from "@/actions/getPlayers";
 import AccountInfo from "../AccountInfo";
 import { Crown, GraduationCap, TrophyIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { exitGame } from "@/actions/startGame";
 import DeleteRoomButton from "./DeleteRoomButton";
 import useWinnderDialog from "@/hooks/useWinnerDialog";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 interface Props {
   players: Player[] | undefined;
@@ -24,54 +27,22 @@ interface Props {
 }
 
 const WinnderDialog = ({ players, gameId, board }: Props) => {
-  const { isEnd, onEnd, onWinnerO, onWinnerX, winner } = useWinnderDialog();
+  const { isEnd, winner, minus, prise } = useWinnderDialog();
 
-  const prise = (min: number, max: number): number => {
-    return Math.random() * (max - min) + min;
-  };
-
-  const randomPrise: number = parseInt(prise(24, 34).toFixed(0), 10);
-  const randomMinus: number = parseInt(prise(8, 15).toFixed(0), 10);
-
-  if (players && board) {
-    if (
-      (board[0] && board[1] && board[2]) === "O" ||
-      (board[3] && board[4] && board[5]) === "O" ||
-      (board[6] && board[7] && board[8]) === "O" ||
-      (board[0] && board[3] && board[6]) === "O" ||
-      (board[1] && board[4] && board[7]) === "O" ||
-      (board[2] && board[5] && board[8]) === "O" ||
-      (board[0] && board[4] && board[8]) === "O" ||
-      (board[2] && board[4] && board[6]) === "O"
-    ) {
-      onEnd();
-      onWinnerO();
-    }
-    if (
-      (board[0] && board[1] && board[2]) === "X" ||
-      (board[3] && board[4] && board[5]) === "X" ||
-      (board[6] && board[7] && board[8]) === "X" ||
-      (board[0] && board[3] && board[6]) === "X" ||
-      (board[1] && board[4] && board[7]) === "X" ||
-      (board[2] && board[5] && board[8]) === "X" ||
-      (board[0] && board[4] && board[8]) === "X" ||
-      (board[2] && board[4] && board[6]) === "X"
-    ) {
-      onEnd();
-      onWinnerX();
-    }
-
+  if (players) {
     if (isEnd && winner === "O") {
       if (isEnd && winner) {
-        const pointsSum = players[0].points
-          ? players[0].points + randomPrise
-          : randomPrise;
-        const pointsMinus = players[1].points
-          ? players[1].points - randomMinus
-          : 0;
+        const pointsSum = players[0]?.points ? prise : prise;
+        const pointsMinus = players[1]?.points ? minus : 0;
 
-        givePoints(players[0].userId, pointsSum);
-        givePoints(players[1].userId, pointsMinus);
+        incrementPoints(players[0]?.userId, pointsSum);
+        decrementPoints(players[1]?.userId, pointsMinus);
+
+        exitGame(gameId);
+
+        setTimeout(() => {
+          revalidatePath(`/play/${gameId}`);
+        }, 5000);
 
         return (
           <Dialog open>
@@ -105,7 +76,7 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
                           <p>Рейтинг:</p>
                           <span className="flex gap-1 justify-center items-center text-yellow-500">
                             <p className="font-medium">
-                              {players[0]?.points} + {randomPrise}
+                              {players[0]?.points} + {prise}
                             </p>{" "}
                             <TrophyIcon className="w-4 h-4" />
                           </span>
@@ -136,14 +107,14 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
                           <span className="flex gap-1 justify-center items-center text-yellow-500">
                             <p className="font-medium">
                               {players[1]?.points} -{" "}
-                              {players[1].points !== 0 ? randomMinus : 0}
+                              {players[1]?.points !== 0 ? minus : 0}
                             </p>{" "}
                             <TrophyIcon className="w-4 h-4" />
                           </span>
                         </div>
                       </div>
                     </div>
-                    <DeleteRoomButton gameId={gameId} />
+                    <Link href="/play">Покинуть комнату</Link>
                   </div>
                 </DialogDescription>
               </DialogHeader>
@@ -154,15 +125,17 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
     }
 
     if (isEnd && winner === "X") {
-      const pointsSum = players[1].points
-        ? players[1].points + randomPrise
-        : randomPrise;
-      const pointsMinus = players[0].points
-        ? players[0].points - randomMinus
-        : 0;
+      const pointsSum = players[1]?.points ? prise : prise;
+      const pointsMinus = players[0]?.points ? minus : 0;
 
-      givePoints(players[1].userId, pointsSum);
-      givePoints(players[0].userId, pointsMinus);
+      incrementPoints(players[1]?.userId, pointsSum);
+      decrementPoints(players[0]?.userId, pointsMinus);
+
+      exitGame(gameId);
+
+      setTimeout(() => {
+        revalidatePath(`/play/${gameId}`);
+      }, 5000);
 
       return (
         <Dialog open>
@@ -196,7 +169,7 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
                         <p>Рейтинг:</p>
                         <span className="flex gap-1 justify-center items-center text-yellow-500">
                           <p className="font-medium">
-                            {players[1]?.points} + {randomPrise}
+                            {players[1]?.points} + {prise}
                           </p>{" "}
                           <TrophyIcon className="w-4 h-4" />
                         </span>
@@ -227,14 +200,14 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
                         <span className="flex gap-1 justify-center items-center text-yellow-500">
                           <p className="font-medium">
                             {players[0]?.points} -{" "}
-                            {players[0]?.points !== 0 ? randomMinus : 0}
+                            {players[0]?.points !== 0 ? minus : 0}
                           </p>{" "}
                           <TrophyIcon className="w-4 h-4" />
                         </span>
                       </div>
                     </div>
                   </div>
-                  <DeleteRoomButton gameId={gameId} />
+                  <Link href="/play">Покинуть комнату</Link>
                 </div>
               </DialogDescription>
             </DialogHeader>
@@ -244,13 +217,18 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
     }
 
     if (isEnd) {
+      exitGame(gameId);
+
+      setTimeout(() => {
+        redirect("/play");
+      }, 5000);
       return (
         <Dialog open>
           <DialogContent className="w-[400px] rounded-md">
             <DialogHeader>
               <DialogTitle className="text-3xl">Ничья</DialogTitle>
               <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
-                <DeleteRoomButton gameId={gameId} />
+                <Link href="/play">Покинуть комнату</Link>
               </DialogDescription>
             </DialogHeader>
           </DialogContent>

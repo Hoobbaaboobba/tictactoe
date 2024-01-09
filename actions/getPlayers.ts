@@ -26,7 +26,10 @@ export const getPlayers = async (gameid: string) => {
   }
 };
 
-export const givePoints = async (playerId: string, currentCoins: number) => {
+export const incrementPoints = async (
+  playerId: string,
+  currentCoins: number
+) => {
   try {
     const user = currentUser();
 
@@ -39,7 +42,35 @@ export const givePoints = async (playerId: string, currentCoins: number) => {
         id: playerId,
       },
       data: {
-        points: currentCoins,
+        points: {
+          increment: currentCoins,
+        },
+      },
+    });
+  } catch {
+    return { error: "Что-то пошло не так!" };
+  }
+};
+
+export const decrementPoints = async (
+  playerId: string,
+  currentCoins: number
+) => {
+  try {
+    const user = currentUser();
+
+    if (!user) {
+      return null;
+    }
+
+    await db.user.update({
+      where: {
+        id: playerId,
+      },
+      data: {
+        points: {
+          decrement: currentCoins,
+        },
       },
     });
   } catch {
