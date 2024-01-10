@@ -89,14 +89,14 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
       setButtonCont(data);
 
       if (
-        (data[0] && data[1] && data[2] === "O") ||
-        (data[3] && data[4] && data[5] === "O") ||
-        (data[6] && data[7] && data[8] === "O") ||
-        (data[0] && data[3] && data[6] === "O") ||
-        (data[1] && data[4] && data[7] === "O") ||
-        (data[2] && data[5] && data[8] === "O") ||
-        (data[0] && data[4] && data[8] === "O") ||
-        (data[2] && data[4] && data[6] === "O")
+        (data[0] === "O" && data[1] === "O" && data[2] === "O") ||
+        (data[3] === "O" && data[4] === "O" && data[5] === "O") ||
+        (data[6] === "O" && data[7] === "O" && data[8] === "O") ||
+        (data[0] === "O" && data[3] === "O" && data[6] === "O") ||
+        (data[1] === "O" && data[4] === "O" && data[7] === "O") ||
+        (data[2] === "O" && data[5] === "O" && data[8] === "O") ||
+        (data[0] === "O" && data[4] === "O" && data[8] === "O") ||
+        (data[2] === "O" && data[4] === "O" && data[6] === "O")
       ) {
         onEnd();
         onWinnerO();
@@ -110,14 +110,14 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
       }
 
       if (
-        (data[0] && data[1] && data[2] === "X") ||
-        (data[3] && data[4] && data[5] === "X") ||
-        (data[6] && data[7] && data[8] === "X") ||
-        (data[0] && data[3] && data[6] === "X") ||
-        (data[1] && data[4] && data[7] === "X") ||
-        (data[2] && data[5] && data[8] === "X") ||
-        (data[0] && data[4] && data[8] === "X") ||
-        (data[2] && data[4] && data[6] === "X")
+        (data[0] === "X" && data[1] === "X" && data[2] === "X") ||
+        (data[3] === "X" && data[4] === "X" && data[5] === "X") ||
+        (data[6] === "X" && data[7] === "X" && data[8] === "X") ||
+        (data[0] === "X" && data[3] === "X" && data[6] === "X") ||
+        (data[1] === "X" && data[4] === "X" && data[7] === "X") ||
+        (data[2] === "X" && data[5] === "X" && data[8] === "X") ||
+        (data[0] === "X" && data[4] === "X" && data[8] === "X") ||
+        (data[2] === "X" && data[4] === "X" && data[6] === "X")
       ) {
         onEnd();
         onWinnerX();
