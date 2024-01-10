@@ -22,7 +22,7 @@ import {
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import LeaveRoomButton from "./LeaveRoomButton";
 import { ScaleLoader } from "react-spinners";
-import { exitGame, leaveRoom } from "@/actions/startGame";
+import { endGame, exitGame, leaveRoom } from "@/actions/startGame";
 import GameInfo from "../GameInfo";
 import { useSocket } from "../providers/SocketProvider";
 import { cellState } from "@/actions/cellState";
@@ -45,8 +45,7 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
   const [isPending, startTransition] = useTransition();
   const [currentStep, setCurrentStep] = useState<string>(currentSymbol);
 
-  const { onEnd, resetEnd, resetWinner, onWinnerO, onWinnerX } =
-    useWinnderDialog();
+  const { onEnd, onWinnerO, onWinnerX } = useWinnderDialog();
 
   const [buttonCont, setButtonCont] = useState([
     "",
@@ -87,52 +86,6 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
 
     socket.on("message", (data: string[]) => {
       setButtonCont(data);
-
-      if (
-        (data[0] === "O" && data[1] === "O" && data[2] === "O") ||
-        (data[3] === "O" && data[4] === "O" && data[5] === "O") ||
-        (data[6] === "O" && data[7] === "O" && data[8] === "O") ||
-        (data[0] === "O" && data[3] === "O" && data[6] === "O") ||
-        (data[1] === "O" && data[4] === "O" && data[7] === "O") ||
-        (data[2] === "O" && data[5] === "O" && data[8] === "O") ||
-        (data[0] === "O" && data[4] === "O" && data[8] === "O") ||
-        (data[2] === "O" && data[4] === "O" && data[6] === "O")
-      ) {
-        onEnd();
-        onWinnerO();
-
-        if (players) {
-          incrementPoints(players[0]?.userId, gameId);
-          decrementPoints(players[1]?.userId, gameId);
-        }
-
-        startTransition(async () => {
-          await exitGame(gameId);
-        });
-      }
-
-      if (
-        (data[0] === "X" && data[1] === "X" && data[2] === "X") ||
-        (data[3] === "X" && data[4] === "X" && data[5] === "X") ||
-        (data[6] === "X" && data[7] === "X" && data[8] === "X") ||
-        (data[0] === "X" && data[3] === "X" && data[6] === "X") ||
-        (data[1] === "X" && data[4] === "X" && data[7] === "X") ||
-        (data[2] === "X" && data[5] === "X" && data[8] === "X") ||
-        (data[0] === "X" && data[4] === "X" && data[8] === "X") ||
-        (data[2] === "X" && data[4] === "X" && data[6] === "X")
-      ) {
-        onEnd();
-        onWinnerX();
-
-        if (players) {
-          incrementPoints(players[1]?.userId, gameId);
-          decrementPoints(players[0]?.userId, gameId);
-        }
-
-        startTransition(async () => {
-          await exitGame(gameId);
-        });
-      }
     });
 
     return () => {
@@ -220,6 +173,40 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
 
     await cellState(index, symbol, gameId);
     await setStep(currentStep, gameId);
+
+    if (board) {
+      if (
+        (board[0] === "O" && board[1] === "O" && board[2] === "O") ||
+        (board[3] === "O" && board[4] === "O" && board[5] === "O") ||
+        (board[6] === "O" && board[7] === "O" && board[8] === "O") ||
+        (board[0] === "O" && board[3] === "O" && board[6] === "O") ||
+        (board[1] === "O" && board[4] === "O" && board[7] === "O") ||
+        (board[2] === "O" && board[5] === "O" && board[8] === "O") ||
+        (board[0] === "O" && board[4] === "O" && board[8] === "O") ||
+        (board[2] === "O" && board[4] === "O" && board[6] === "O")
+      ) {
+        onEnd();
+        onWinnerO();
+
+        await exitGame(gameId, players);
+      }
+
+      if (
+        (board[0] === "X" && board[1] === "X" && board[2] === "X") ||
+        (board[3] === "X" && board[4] === "X" && board[5] === "X") ||
+        (board[6] === "X" && board[7] === "X" && board[8] === "X") ||
+        (board[0] === "X" && board[3] === "X" && board[6] === "X") ||
+        (board[1] === "X" && board[4] === "X" && board[7] === "X") ||
+        (board[2] === "X" && board[5] === "X" && board[8] === "X") ||
+        (board[0] === "X" && board[4] === "X" && board[8] === "X") ||
+        (board[2] === "X" && board[4] === "X" && board[6] === "X")
+      ) {
+        onEnd();
+        onWinnerX();
+
+        await exitGame(gameId, players);
+      }
+    }
   };
 
   return (
@@ -236,17 +223,19 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
               {buttonCont.map((cell, index) => {
                 return (
                   <>
-                    <button
-                      key={index}
-                      onClick={() => sendSocketEvent(index, currentStep)}
-                      className={`w-16 h-16 ${
-                        board && (cell === "O" || board[index] === "O")
-                          ? "text-green-600"
-                          : "text-rose-600"
-                      } border dark:border-white border-black flex justify-center items-center text-4xl`}
-                    >
-                      {board && (board[index] === " " ? cell : board[index])}
-                    </button>
+                    <form action={() => sendSocketEvent(index, currentStep)}>
+                      <button
+                        key={index}
+                        type="submit"
+                        className={`w-16 h-16 ${
+                          board && (cell === "O" || board[index] === "O")
+                            ? "text-green-600"
+                            : "text-rose-600"
+                        } border dark:border-white border-black flex justify-center items-center text-4xl`}
+                      >
+                        {board && (board[index] === " " ? cell : board[index])}
+                      </button>
+                    </form>
                   </>
                 );
               })}

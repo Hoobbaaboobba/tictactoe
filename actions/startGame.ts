@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Player } from "@prisma/client";
 
 export const startGame = async () => {
   try {
@@ -41,7 +42,10 @@ export const startGame = async () => {
   }
 };
 
-export const exitGame = async (gameId: string) => {
+export const exitGame = async (
+  gameId: string,
+  players: Player[] | undefined
+) => {
   try {
     const user = await currentUser();
 
@@ -49,15 +53,49 @@ export const exitGame = async (gameId: string) => {
       return null;
     }
 
-    const playgruond = await db.ticTacToePlayGround.findFirst({
-      where: {
-        id: gameId,
-      },
-    });
+    const existringTicTacToePlayground =
+      await db.ticTacToePlayGround.findUnique({
+        where: {
+          id: gameId,
+        },
+      });
+
+    if (!existringTicTacToePlayground) {
+      return redirect("/play");
+    }
+
+    if (players) {
+      await db.user.update({
+        where: {
+          id: players[0]?.userId,
+        },
+        data: {
+          points: {
+            increment: existringTicTacToePlayground?.prise,
+          },
+        },
+      });
+
+      const points =
+        (players[1].points || 0) < existringTicTacToePlayground?.minus
+          ? 0
+          : existringTicTacToePlayground.minus;
+
+      await db.user.update({
+        where: {
+          id: players[1]?.userId,
+        },
+        data: {
+          points: {
+            increment: points,
+          },
+        },
+      });
+    }
 
     await db.ticTacToePlayGround.delete({
       where: {
-        id: playgruond?.id,
+        id: gameId,
       },
     });
 
@@ -83,6 +121,29 @@ export const leaveRoom = async (gameId: string, userId?: string) => {
             userId: userId,
           },
         },
+      },
+    });
+
+    return redirect("/play");
+  } catch {
+    return { error: "Что-то пошло не так!" };
+  }
+};
+
+export const endGame = async (gameId: string) => {
+  try {
+    const user = currentUser();
+
+    if (!user) {
+      return null;
+    }
+
+    await db.ticTacToePlayGround.update({
+      where: {
+        id: gameId,
+      },
+      data: {
+        status: "end",
       },
     });
 
