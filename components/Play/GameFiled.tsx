@@ -171,9 +171,6 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
     socket.emit("message", newArray);
     socket.emit("step", currentStep);
 
-    await cellState(index, symbol, gameId);
-    await setStep(currentStep, gameId);
-
     if (board) {
       if (
         (board[0] === "O" && board[1] === "O" && board[2] === "O") ||
@@ -207,6 +204,9 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
         await exitGame(gameId, players);
       }
     }
+
+    await cellState(index, symbol, gameId);
+    await setStep(currentStep, gameId);
   };
 
   return (
