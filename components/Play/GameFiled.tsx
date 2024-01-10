@@ -106,7 +106,9 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
           decrementPoints(players[1]?.userId, gameId);
         }
 
-        exitGame(gameId);
+        startTransition(async () => {
+          await exitGame(gameId);
+        });
       }
 
       if (
@@ -127,7 +129,9 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
           decrementPoints(players[0]?.userId, gameId);
         }
 
-        exitGame(gameId);
+        startTransition(async () => {
+          await exitGame(gameId);
+        });
       }
     });
 
@@ -186,7 +190,14 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
               <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
                 <Button onClick={reloadPlayers}>
                   {isPending ? (
-                    <ScaleLoader color="#000000" height={20} width={4} />
+                    <>
+                      <div className="dark:block hidden">
+                        <ScaleLoader color="#000000" height={20} width={4} />
+                      </div>
+                      <div className="dark:hidden block">
+                        <ScaleLoader color="#ffffff" height={20} width={4} />
+                      </div>
+                    </>
                   ) : (
                     "Да"
                   )}

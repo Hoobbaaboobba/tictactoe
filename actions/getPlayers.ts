@@ -2,10 +2,11 @@
 
 import { currentUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 export const getPlayers = async (gameid: string) => {
   try {
-    const user = currentUser();
+    const user = await currentUser();
 
     if (!user) {
       return null;
@@ -28,20 +29,18 @@ export const getPlayers = async (gameid: string) => {
 
 export const incrementPoints = async (playerId: string, gameId: string) => {
   try {
-    const user = currentUser();
+    const user = await currentUser();
 
     if (!user) {
       return null;
     }
 
-    const updatePoints = await db.ticTacToePlayGround.update({
-      where: {
-        id: gameId,
-      },
-      data: {
-        prise: parseInt((Math.random() * (34 - 15) + 15).toFixed(0)),
-      },
-    });
+    const existringTicTacToePlayground =
+      await db.ticTacToePlayGround.findUnique({
+        where: {
+          id: gameId,
+        },
+      });
 
     await db.user.update({
       where: {
@@ -49,7 +48,7 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
       },
       data: {
         points: {
-          increment: updatePoints.prise,
+          increment: existringTicTacToePlayground?.prise,
         },
       },
     });
@@ -60,20 +59,42 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
 
 export const decrementPoints = async (playerId: string, gameId: string) => {
   try {
-    const user = currentUser();
+    const user = await currentUser();
 
     if (!user) {
       return null;
     }
 
-    const updatePoints = await db.ticTacToePlayGround.update({
+    const newUser = await db.user.findUnique({
       where: {
-        id: gameId,
-      },
-      data: {
-        minus: parseInt((Math.random() * (12 - 5) + 5).toFixed(0)),
+        id: user.id,
       },
     });
+
+    const existringTicTacToePlayground =
+      await db.ticTacToePlayGround.findUnique({
+        where: {
+          id: gameId,
+        },
+      });
+
+    if (!existringTicTacToePlayground) {
+      return redirect("/play");
+    }
+
+    const points: boolean =
+      (newUser?.points || 0) < existringTicTacToePlayground?.minus;
+
+    if (points) {
+      await db.user.update({
+        where: {
+          id: playerId,
+        },
+        data: {
+          points: 0,
+        },
+      });
+    }
 
     await db.user.update({
       where: {
@@ -81,7 +102,7 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
       },
       data: {
         points: {
-          decrement: updatePoints.minus,
+          decrement: existringTicTacToePlayground?.minus,
         },
       },
     });

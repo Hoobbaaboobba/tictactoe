@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,14 +12,15 @@ import Link from "next/link";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Button } from "../ui/button";
 import { TrophyIcon } from "lucide-react";
-import Price from "./Price";
 
 interface Props {
   players: Player[] | undefined;
   gameId: string;
+  prise: number;
+  minus: number;
 }
 
-const WinnderDialog = ({ players, gameId }: Props) => {
+const WinnderDialog = ({ players, gameId, prise, minus }: Props) => {
   const { isEnd, winner } = useWinnderDialog();
 
   const user = useCurrentUser();
@@ -38,7 +38,7 @@ const WinnderDialog = ({ players, gameId }: Props) => {
                 <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
                   <div className="flex flex-col justify-center items-center gap-4">
                     <div className="text-4xl flex gap-2 justify-center items-center text-yellow-400">
-                      <Price gameId={gameId} /> <TrophyIcon />
+                      +{prise} <TrophyIcon />
                     </div>
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>
@@ -57,7 +57,7 @@ const WinnderDialog = ({ players, gameId }: Props) => {
                 <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
                   <div className="flex flex-col justify-center items-center gap-4">
                     <div className="text-4xl flex gap-2 justify-center items-center text-yellow-400">
-                      <Price gameId={gameId} minus /> <TrophyIcon />
+                      -{minus} <TrophyIcon />
                     </div>
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>
@@ -86,7 +86,7 @@ const WinnderDialog = ({ players, gameId }: Props) => {
                 <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
                   <div className="flex flex-col justify-center items-center gap-4">
                     <div className="text-4xl flex gap-2 justify-center items-center text-yellow-400">
-                      <Price gameId={gameId} /> <TrophyIcon />
+                      +{prise} <TrophyIcon />
                     </div>
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>
@@ -105,7 +105,7 @@ const WinnderDialog = ({ players, gameId }: Props) => {
                 <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
                   <div className="flex flex-col justify-center items-center gap-4">
                     <div className="text-4xl flex gap-2 justify-center items-center text-yellow-400">
-                      <Price gameId={gameId} minus /> <TrophyIcon />
+                      -{minus} <TrophyIcon />
                     </div>
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>

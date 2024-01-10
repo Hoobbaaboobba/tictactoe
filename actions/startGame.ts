@@ -10,7 +10,6 @@ import { redirect } from "next/navigation";
 export const startGame = async () => {
   try {
     const user = await currentUser();
-    const expires = new Date(new Date().getTime() + 3600 * 1000);
 
     if (!user) {
       return null;
@@ -20,6 +19,8 @@ export const startGame = async () => {
       data: {
         userId: user.id,
         inviteCode: uuidv4(),
+        prise: parseInt((Math.random() * (34 - 15) + 15).toFixed(0)),
+        minus: parseInt((Math.random() * (12 - 5) + 5).toFixed(0)),
         players: {
           create: [
             {

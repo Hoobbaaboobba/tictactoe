@@ -1,4 +1,3 @@
-import CheckWin from "@/components/Play/CheckWin";
 import { GameFiled } from "@/components/Play/GameFiled";
 import WinnderDialog from "@/components/Play/WinnderDialog";
 import { currentUser } from "@/lib/auth";
@@ -56,6 +55,8 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
       <WinnderDialog
         players={ticTacToeGamePlayers?.players}
         gameId={params.gameId}
+        prise={existingTicTacToeGame.prise}
+        minus={existingTicTacToeGame.minus}
       />
     </>
   );
