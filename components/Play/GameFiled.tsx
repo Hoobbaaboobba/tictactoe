@@ -79,50 +79,47 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
     socket.on("step", (data: string) => {
       if (data === "O") {
         setCurrentStep("X");
-
-        if (board && players && board.join("").length > 4) {
-          if (
-            (board[0] && board[1] && board[2] === "O") ||
-            (board[3] && board[4] && board[5] === "O") ||
-            (board[6] && board[7] && board[8] === "O") ||
-            (board[0] && board[3] && board[6] === "O") ||
-            (board[1] && board[4] && board[7] === "O") ||
-            (board[2] && board[5] && board[8] === "O") ||
-            (board[0] && board[4] && board[8] === "O") ||
-            (board[2] && board[4] && board[6] === "O")
-          ) {
-            onEnd();
-            onWinnerO();
-
-            incrementPoints(players[0]?.userId, gameId);
-            decrementPoints(players[1]?.userId, gameId);
-          }
-        }
       } else {
         setCurrentStep("O");
-        if (board && players && board.join("").length > 4) {
-          if (
-            (board[0] && board[1] && board[2] === "X") ||
-            (board[3] && board[4] && board[5] === "X") ||
-            (board[6] && board[7] && board[8] === "X") ||
-            (board[0] && board[3] && board[6] === "X") ||
-            (board[1] && board[4] && board[7] === "X") ||
-            (board[2] && board[5] && board[8] === "X") ||
-            (board[0] && board[4] && board[8] === "X") ||
-            (board[2] && board[4] && board[6] === "X")
-          ) {
-            onEnd();
-            onWinnerX();
-
-            incrementPoints(players[1]?.userId, gameId);
-            decrementPoints(players[2]?.userId, gameId);
-          }
-        }
       }
     });
 
     socket.on("message", (data: string[]) => {
       setButtonCont(data);
+
+      if (
+        (data[0] && data[1] && data[2] === "O") ||
+        (data[3] && data[4] && data[5] === "O") ||
+        (data[6] && data[7] && data[8] === "O") ||
+        (data[0] && data[3] && data[6] === "O") ||
+        (data[1] && data[4] && data[7] === "O") ||
+        (data[2] && data[5] && data[8] === "O") ||
+        (data[0] && data[4] && data[8] === "O") ||
+        (data[2] && data[4] && data[6] === "O")
+      ) {
+        onEnd();
+        onWinnerO();
+
+        if (players) {
+          incrementPoints(players[0]?.userId, gameId);
+          decrementPoints(players[1]?.userId, gameId);
+        }
+      }
+
+      if (
+        (data[0] && data[1] && data[2] === "X") ||
+        (data[3] && data[4] && data[5] === "X") ||
+        (data[6] && data[7] && data[8] === "X") ||
+        (data[0] && data[3] && data[6] === "X") ||
+        (data[1] && data[4] && data[7] === "X") ||
+        (data[2] && data[5] && data[8] === "X") ||
+        (data[0] && data[4] && data[8] === "X") ||
+        (data[2] && data[4] && data[6] === "X")
+      )
+        if (players) {
+          incrementPoints(players[1]?.userId, gameId);
+          decrementPoints(players[0]?.userId, gameId);
+        }
     });
 
     return () => {
