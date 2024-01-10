@@ -39,7 +39,7 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
         id: gameId,
       },
       data: {
-        prise: 28,
+        prise: parseInt((Math.random() * (34 - 15) + 15).toFixed(0)),
       },
     });
 
@@ -48,7 +48,9 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
         id: playerId,
       },
       data: {
-        points: updatePoints?.prise,
+        points: {
+          increment: updatePoints.prise,
+        },
       },
     });
   } catch {
@@ -69,7 +71,7 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
         id: gameId,
       },
       data: {
-        minus: 15,
+        minus: parseInt((Math.random() * (12 - 5) + 5).toFixed(0)),
       },
     });
 
@@ -78,7 +80,9 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
         id: playerId,
       },
       data: {
-        points: updatePoints.minus,
+        points: {
+          decrement: updatePoints.minus,
+        },
       },
     });
   } catch {

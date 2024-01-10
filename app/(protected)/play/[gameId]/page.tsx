@@ -54,17 +54,9 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
         currentSymbol={currentStep}
       />
       <WinnderDialog
-        board={board}
         players={ticTacToeGamePlayers?.players}
         gameId={params.gameId}
-        prise={existingTicTacToeGame.prise}
-        minus={existingTicTacToeGame.minus}
       />
-      {/* <CheckWin
-        board={board}
-        players={ticTacToeGamePlayers?.players}
-        gameId={params.gameId}
-      /> */}
     </>
   );
 };
