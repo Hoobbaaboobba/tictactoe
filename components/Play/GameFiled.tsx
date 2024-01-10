@@ -86,6 +86,50 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
 
     socket.on("message", (data: string[]) => {
       setButtonCont(data);
+
+      if (
+        (data[0] === "O" && data[1] === "O" && data[2] === "O") ||
+        (data[3] === "O" && data[4] === "O" && data[5] === "O") ||
+        (data[6] === "O" && data[7] === "O" && data[8] === "O") ||
+        (data[0] === "O" && data[3] === "O" && data[6] === "O") ||
+        (data[1] === "O" && data[4] === "O" && data[7] === "O") ||
+        (data[2] === "O" && data[5] === "O" && data[8] === "O") ||
+        (data[0] === "O" && data[4] === "O" && data[8] === "O") ||
+        (data[2] === "O" && data[4] === "O" && data[6] === "O")
+      ) {
+        if (players) {
+          const endGame = async () => {
+            onEnd();
+            onWinnerO();
+            await incrementPoints(players[0].userId, gameId);
+            await decrementPoints(players[1].userId, gameId);
+            await exitGame(gameId);
+          };
+          endGame();
+        }
+      }
+
+      if (
+        (data[0] === "X" && data[1] === "X" && data[2] === "X") ||
+        (data[3] === "X" && data[4] === "X" && data[5] === "X") ||
+        (data[6] === "X" && data[7] === "X" && data[8] === "X") ||
+        (data[0] === "X" && data[3] === "X" && data[6] === "X") ||
+        (data[1] === "X" && data[4] === "X" && data[7] === "X") ||
+        (data[2] === "X" && data[5] === "X" && data[8] === "X") ||
+        (data[0] === "X" && data[4] === "X" && data[8] === "X") ||
+        (data[2] === "X" && data[4] === "X" && data[6] === "X")
+      ) {
+        if (players) {
+          const endGame = async () => {
+            onEnd();
+            onWinnerX();
+            await incrementPoints(players[1].userId, gameId);
+            await decrementPoints(players[0].userId, gameId);
+            await exitGame(gameId);
+          };
+          endGame();
+        }
+      }
     });
 
     return () => {
@@ -173,44 +217,6 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
 
     await cellState(index, symbol, gameId);
     await setStep(currentStep, gameId);
-
-    if (board && players) {
-      if (
-        (board[0] === "O" && board[1] === "O" && board[2] === "O") ||
-        (board[3] === "O" && board[4] === "O" && board[5] === "O") ||
-        (board[6] === "O" && board[7] === "O" && board[8] === "O") ||
-        (board[0] === "O" && board[3] === "O" && board[6] === "O") ||
-        (board[1] === "O" && board[4] === "O" && board[7] === "O") ||
-        (board[2] === "O" && board[5] === "O" && board[8] === "O") ||
-        (board[0] === "O" && board[4] === "O" && board[8] === "O") ||
-        (board[2] === "O" && board[4] === "O" && board[6] === "O")
-      ) {
-        onEnd();
-        onWinnerO();
-
-        await incrementPoints(players[0].userId, gameId);
-        await decrementPoints(players[1].userId, gameId);
-        await exitGame(gameId);
-      }
-
-      if (
-        (board[0] === "X" && board[1] === "X" && board[2] === "X") ||
-        (board[3] === "X" && board[4] === "X" && board[5] === "X") ||
-        (board[6] === "X" && board[7] === "X" && board[8] === "X") ||
-        (board[0] === "X" && board[3] === "X" && board[6] === "X") ||
-        (board[1] === "X" && board[4] === "X" && board[7] === "X") ||
-        (board[2] === "X" && board[5] === "X" && board[8] === "X") ||
-        (board[0] === "X" && board[4] === "X" && board[8] === "X") ||
-        (board[2] === "X" && board[4] === "X" && board[6] === "X")
-      ) {
-        onEnd();
-        onWinnerX();
-
-        await incrementPoints(players[1].userId, gameId);
-        await decrementPoints(players[0].userId, gameId);
-        await exitGame(gameId);
-      }
-    }
   };
 
   return (
