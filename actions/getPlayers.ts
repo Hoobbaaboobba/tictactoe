@@ -39,7 +39,7 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
         id: gameId,
       },
       data: {
-        prise: parseInt((Math.random() * (34 - 15) + 15).toFixed(0)),
+        prise: 28,
       },
     });
 
@@ -69,7 +69,7 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
         id: gameId,
       },
       data: {
-        minus: parseInt((Math.random() * (12 - 5) + 5).toFixed(0)),
+        minus: 15,
       },
     });
 
@@ -77,7 +77,9 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
       where: {
         id: playerId,
       },
-      data: {},
+      data: {
+        points: updatePoints.minus,
+      },
     });
   } catch {
     return { error: "Что-то пошло не так!" };

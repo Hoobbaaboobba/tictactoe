@@ -45,7 +45,8 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
   const [isPending, startTransition] = useTransition();
   const [currentStep, setCurrentStep] = useState<string>(currentSymbol);
 
-  const { onEnd, onDraw, onWinnerO, onWinnerX } = useWinnderDialog();
+  const { onEnd, resetEnd, resetWinner, onWinnerO, onWinnerX } =
+    useWinnderDialog();
 
   const [buttonCont, setButtonCont] = useState([
     "",
@@ -104,6 +105,8 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
           incrementPoints(players[0]?.userId, gameId);
           decrementPoints(players[1]?.userId, gameId);
         }
+
+        exitGame(gameId);
       }
 
       if (
@@ -115,11 +118,17 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
         (data[2] && data[5] && data[8] === "X") ||
         (data[0] && data[4] && data[8] === "X") ||
         (data[2] && data[4] && data[6] === "X")
-      )
+      ) {
+        onEnd();
+        onWinnerX();
+
         if (players) {
           incrementPoints(players[1]?.userId, gameId);
           decrementPoints(players[0]?.userId, gameId);
         }
+
+        exitGame(gameId);
+      }
     });
 
     return () => {
@@ -207,7 +216,7 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
       <PlayersField players={playersData} />
       {playersData && playersData[1] && (
         <>
-          <GameInfo currentStep={currentSymbol} />
+          <GameInfo currentStep={currentStep} />
           <div
             className={`border-2 border-black rounded-xl flex justify-center items-center p-4 relative w-[320px] h-[320px] shadow-2xl dark:bg-slate-900`}
           >
@@ -220,10 +229,9 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
                       key={index}
                       onClick={() => sendSocketEvent(index, currentStep)}
                       className={`w-16 h-16 ${
-                        board &&
-                        (cell || board[index] === "O"
+                        board && (cell === "O" || board[index] === "O")
                           ? "text-green-600"
-                          : "text-rose-600")
+                          : "text-rose-600"
                       } border dark:border-white border-black flex justify-center items-center text-4xl`}
                     >
                       {board && (board[index] === " " ? cell : board[index])}
