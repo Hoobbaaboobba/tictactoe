@@ -42,6 +42,10 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
         },
       });
 
+    if (!existringTicTacToePlayground) {
+      return redirect("/play");
+    }
+
     await db.user.update({
       where: {
         id: playerId,

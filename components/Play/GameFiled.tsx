@@ -45,7 +45,8 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
   const [isPending, startTransition] = useTransition();
   const [currentStep, setCurrentStep] = useState<string>(currentSymbol);
 
-  const { onEnd, onWinnerO, onWinnerX } = useWinnderDialog();
+  const { onEnd, onWinnerO, resetEnd, resetWinner, onWinnerX } =
+    useWinnderDialog();
 
   const [buttonCont, setButtonCont] = useState([
     "",
@@ -98,12 +99,14 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
         (data[2] === "O" && data[4] === "O" && data[6] === "O")
       ) {
         if (players) {
+          onEnd();
+          onWinnerO();
           const endGame = async () => {
-            onEnd();
-            onWinnerO();
             await incrementPoints(players[0].userId, gameId);
             await decrementPoints(players[1].userId, gameId);
             await exitGame(gameId);
+            resetEnd();
+            resetWinner();
           };
           endGame();
         }
@@ -120,12 +123,14 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
         (data[2] === "X" && data[4] === "X" && data[6] === "X")
       ) {
         if (players) {
+          onEnd();
+          onWinnerX();
           const endGame = async () => {
-            onEnd();
-            onWinnerX();
             await incrementPoints(players[1].userId, gameId);
             await decrementPoints(players[0].userId, gameId);
             await exitGame(gameId);
+            resetEnd();
+            reloadPlayers();
           };
           endGame();
         }
