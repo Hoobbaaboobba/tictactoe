@@ -26,10 +26,7 @@ export const getPlayers = async (gameid: string) => {
   }
 };
 
-export const incrementPoints = async (
-  playerId: string,
-  currentCoins: number
-) => {
+export const incrementPoints = async (playerId: string, gameId: string) => {
   try {
     const user = currentUser();
 
@@ -37,14 +34,18 @@ export const incrementPoints = async (
       return null;
     }
 
+    const existingGame = await db.ticTacToePlayGround.findUnique({
+      where: {
+        id: gameId,
+      },
+    });
+
     await db.user.update({
       where: {
         id: playerId,
       },
       data: {
-        points: {
-          increment: currentCoins,
-        },
+        points: existingGame?.prise,
       },
     });
   } catch {
@@ -52,10 +53,7 @@ export const incrementPoints = async (
   }
 };
 
-export const decrementPoints = async (
-  playerId: string,
-  currentCoins: number
-) => {
+export const decrementPoints = async (playerId: string, gameId: string) => {
   try {
     const user = currentUser();
 
@@ -63,13 +61,19 @@ export const decrementPoints = async (
       return null;
     }
 
+    const existingGame = await db.ticTacToePlayGround.findUnique({
+      where: {
+        id: gameId,
+      },
+    });
+
     await db.user.update({
       where: {
         id: playerId,
       },
       data: {
         points: {
-          decrement: currentCoins,
+          decrement: existingGame?.minus,
         },
       },
     });

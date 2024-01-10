@@ -32,6 +32,8 @@ model TicTacToePlayGround {
   status     String   @default("ongoing")
   userId     String
   board      String   @default("---------")
+  prise      Int      @default(0)
+  minus      Int      @default(0)
   currentSymbol String @default("O")
   created    DateTime @default(now())
   updatedAt  DateTime @updatedAt

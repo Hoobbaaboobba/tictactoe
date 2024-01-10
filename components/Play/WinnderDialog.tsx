@@ -10,11 +10,9 @@ import {
 } from "../ui/dialog";
 import { Player } from "@prisma/client";
 import { decrementPoints, incrementPoints } from "@/actions/getPlayers";
-import AccountInfo from "../AccountInfo";
 import { Crown, GraduationCap, TrophyIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { exitGame } from "@/actions/startGame";
-import DeleteRoomButton from "./DeleteRoomButton";
 import useWinnderDialog from "@/hooks/useWinnerDialog";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -24,27 +22,25 @@ interface Props {
   players: Player[] | undefined;
   gameId: string;
   board: string[];
+  prise: number;
+  minus: number;
 }
 
-const WinnderDialog = ({ players, gameId, board }: Props) => {
-  const { isEnd, winner, minus, prise, resetEnd, resetWinner } =
-    useWinnderDialog();
+const WinnderDialog = ({ players, gameId, board, prise, minus }: Props) => {
+  const { isEnd, winner, resetEnd, resetWinner } = useWinnderDialog();
 
   if (players) {
     if (isEnd && winner === "O") {
       if (isEnd && winner) {
-        const pointsSum = players[0]?.points ? prise : prise;
-        const pointsMinus = players[1]?.points ? minus : 0;
-
-        incrementPoints(players[0]?.userId, pointsSum);
-        decrementPoints(players[1]?.userId, pointsMinus);
+        incrementPoints(players[0]?.userId, gameId);
+        decrementPoints(players[1]?.userId, gameId);
 
         exitGame(gameId);
 
         setTimeout(() => {
           resetEnd();
           resetWinner();
-          revalidatePath(`/play/${gameId}`);
+          redirect("/play");
         }, 5000);
 
         return (
@@ -128,18 +124,15 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
     }
 
     if (isEnd && winner === "X") {
-      const pointsSum = players[1]?.points ? prise : prise;
-      const pointsMinus = players[0]?.points ? minus : 0;
-
-      incrementPoints(players[1]?.userId, pointsSum);
-      decrementPoints(players[0]?.userId, pointsMinus);
+      incrementPoints(players[1]?.userId, gameId);
+      decrementPoints(players[0]?.userId, gameId);
 
       exitGame(gameId);
 
       setTimeout(() => {
         resetEnd();
         resetWinner();
-        revalidatePath(`/play/${gameId}`);
+        redirect("/play");
       }, 5000);
 
       return (
@@ -225,6 +218,8 @@ const WinnderDialog = ({ players, gameId, board }: Props) => {
       exitGame(gameId);
 
       setTimeout(() => {
+        resetEnd();
+        resetWinner();
         redirect("/play");
       }, 5000);
       return (

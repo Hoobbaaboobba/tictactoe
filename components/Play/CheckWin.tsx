@@ -9,35 +9,29 @@ interface Props {
 const CheckWin = ({ board }: Props) => {
   const { onEnd, onWinnerO, onWinnerX } = useWinnderDialog();
 
-  if (
-    (board[0] === "O" && board[1] === "O" && board[2] === "O") ||
-    (board[3] === "O" && board[4] === "O" && board[5] === "O") ||
-    (board[6] === "O" && board[7] === "O" && board[8] === "O") ||
-    (board[0] === "O" && board[3] === "O" && board[6] === "O") ||
-    (board[1] === "O" && board[4] === "O" && board[7] === "O") ||
-    (board[2] === "O" && board[5] === "O" && board[8] === "O") ||
-    (board[0] === "O" && board[4] === "O" && board[8] === "O") ||
-    (board[2] === "O" && board[4] === "O" && board[6] === "O")
-  ) {
-    onEnd();
-    onWinnerO();
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
 
-    return null;
-  }
-  if (
-    (board[0] === "X" && board[1] === "X" && board[2] === "X") ||
-    (board[3] === "X" && board[4] === "X" && board[5] === "X") ||
-    (board[6] === "X" && board[7] === "X" && board[8] === "X") ||
-    (board[0] === "X" && board[3] === "X" && board[6] === "X") ||
-    (board[1] === "X" && board[4] === "X" && board[7] === "X") ||
-    (board[2] === "X" && board[5] === "X" && board[8] === "X") ||
-    (board[0] === "X" && board[4] === "X" && board[8] === "X") ||
-    (board[2] === "X" && board[4] === "X" && board[6] === "X")
-  ) {
-    onEnd();
-    onWinnerX();
-
-    return null;
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      if (board[a] === "O") {
+        onWinnerO();
+        onEnd();
+        return;
+      } else if (board[a] === "X") {
+        onWinnerX();
+        onEnd();
+      }
+    }
   }
 
   return null;
