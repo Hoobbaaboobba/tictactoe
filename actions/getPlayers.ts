@@ -34,9 +34,12 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
       return null;
     }
 
-    const existingGame = await db.ticTacToePlayGround.findUnique({
+    const updatePoints = await db.ticTacToePlayGround.update({
       where: {
         id: gameId,
+      },
+      data: {
+        prise: parseInt((Math.random() * (34 - 15) + 15).toFixed(0)),
       },
     });
 
@@ -45,7 +48,7 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
         id: playerId,
       },
       data: {
-        points: existingGame?.prise,
+        points: updatePoints?.prise,
       },
     });
   } catch {
@@ -61,9 +64,12 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
       return null;
     }
 
-    const existingGame = await db.ticTacToePlayGround.findUnique({
+    const updatePoints = await db.ticTacToePlayGround.update({
       where: {
         id: gameId,
+      },
+      data: {
+        minus: parseInt((Math.random() * (12 - 5) + 5).toFixed(0)),
       },
     });
 
@@ -71,11 +77,7 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
       where: {
         id: playerId,
       },
-      data: {
-        points: {
-          decrement: existingGame?.minus,
-        },
-      },
+      data: {},
     });
   } catch {
     return { error: "Что-то пошло не так!" };

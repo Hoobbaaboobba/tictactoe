@@ -14,7 +14,11 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { getPlayers } from "@/actions/getPlayers";
+import {
+  decrementPoints,
+  getPlayers,
+  incrementPoints,
+} from "@/actions/getPlayers";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import LeaveRoomButton from "./LeaveRoomButton";
 import { ScaleLoader } from "react-spinners";
@@ -75,8 +79,45 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
     socket.on("step", (data: string) => {
       if (data === "O") {
         setCurrentStep("X");
+
+        if (board && players && board.join("").length > 4) {
+          if (
+            (board[0] && board[1] && board[2] === "O") ||
+            (board[3] && board[4] && board[5] === "O") ||
+            (board[6] && board[7] && board[8] === "O") ||
+            (board[0] && board[3] && board[6] === "O") ||
+            (board[1] && board[4] && board[7] === "O") ||
+            (board[2] && board[5] && board[8] === "O") ||
+            (board[0] && board[4] && board[8] === "O") ||
+            (board[2] && board[4] && board[6] === "O")
+          ) {
+            onEnd();
+            onWinnerO();
+
+            incrementPoints(players[0]?.userId, gameId);
+            decrementPoints(players[1]?.userId, gameId);
+          }
+        }
       } else {
         setCurrentStep("O");
+        if (board && players && board.join("").length > 4) {
+          if (
+            (board[0] && board[1] && board[2] === "X") ||
+            (board[3] && board[4] && board[5] === "X") ||
+            (board[6] && board[7] && board[8] === "X") ||
+            (board[0] && board[3] && board[6] === "X") ||
+            (board[1] && board[4] && board[7] === "X") ||
+            (board[2] && board[5] && board[8] === "X") ||
+            (board[0] && board[4] && board[8] === "X") ||
+            (board[2] && board[4] && board[6] === "X")
+          ) {
+            onEnd();
+            onWinnerX();
+
+            incrementPoints(players[1]?.userId, gameId);
+            decrementPoints(players[2]?.userId, gameId);
+          }
+        }
       }
     });
 
@@ -158,7 +199,6 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
     newArray[index] = symbol;
 
     socket.emit("message", newArray);
-
     socket.emit("step", currentStep);
 
     await cellState(index, symbol, gameId);
@@ -184,10 +224,12 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
                       onClick={() => sendSocketEvent(index, currentStep)}
                       className={`w-16 h-16 ${
                         board &&
-                        (cell === "O" ? "text-green-600" : "text-rose-600")
+                        (cell || board[index] === "O"
+                          ? "text-green-600"
+                          : "text-rose-600")
                       } border dark:border-white border-black flex justify-center items-center text-4xl`}
                     >
-                      {board && (board[index] === "-" ? cell : board[index])}
+                      {board && (board[index] === " " ? cell : board[index])}
                     </button>
                   </>
                 );

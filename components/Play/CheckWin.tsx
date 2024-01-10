@@ -1,40 +1,76 @@
 "use client";
 
+import { decrementPoints, incrementPoints } from "@/actions/getPlayers";
+import { exitGame } from "@/actions/startGame";
 import useWinnderDialog from "@/hooks/useWinnerDialog";
+import { Player } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 interface Props {
   board: string[];
+  players: Player[] | undefined;
+  gameId: string;
 }
 
-const CheckWin = ({ board }: Props) => {
-  const { onEnd, onWinnerO, onWinnerX } = useWinnderDialog();
+const CheckWin = ({ board, players, gameId }: Props) => {
+  const { onEnd, onWinnerO, onWinnerX, resetEnd, resetWinner } =
+    useWinnderDialog();
 
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
+  if (board && players) {
+    if (
+      (board[0] && board[1] && board[2] === "O") ||
+      (board[3] && board[4] && board[5] === "O") ||
+      (board[6] && board[7] && board[8] === "O") ||
+      (board[0] && board[3] && board[6] === "O") ||
+      (board[1] && board[4] && board[7] === "O") ||
+      (board[2] && board[5] && board[8] === "O") ||
+      (board[0] && board[4] && board[8] === "O") ||
+      (board[2] && board[4] && board[6] === "O")
+    ) {
+      onWinnerO();
+      onEnd();
 
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-      if (board[a] === "O") {
-        onWinnerO();
-        onEnd();
-        return;
-      } else if (board[a] === "X") {
-        onWinnerX();
-        onEnd();
-      }
+      incrementPoints(players[0]?.userId, gameId);
+      decrementPoints(players[1]?.userId, gameId);
+
+      exitGame(gameId);
+
+      setTimeout(() => {
+        resetEnd();
+        resetWinner();
+        redirect("/play");
+      }, 8000);
+
+      return null;
     }
-  }
+    if (
+      (board[0] && board[1] && board[2] === "X") ||
+      (board[3] && board[4] && board[5] === "X") ||
+      (board[6] && board[7] && board[8] === "X") ||
+      (board[0] && board[3] && board[6] === "X") ||
+      (board[1] && board[4] && board[7] === "X") ||
+      (board[2] && board[5] && board[8] === "X") ||
+      (board[0] && board[4] && board[8] === "X") ||
+      (board[2] && board[4] && board[6] === "X")
+    ) {
+      onWinnerX();
+      onEnd();
 
-  return null;
+      incrementPoints(players[1]?.userId, gameId);
+      decrementPoints(players[0]?.userId, gameId);
+
+      exitGame(gameId);
+
+      setTimeout(() => {
+        resetEnd();
+        resetWinner();
+        redirect("/play");
+      }, 8000);
+
+      return null;
+    }
+    return null;
+  }
 };
 
 export default CheckWin;

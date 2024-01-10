@@ -45,23 +45,6 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
 
   const currentStep = existingTicTacToeGame.currentSymbol;
 
-  const prise = (min: number, max: number): number => {
-    return Math.random() * (max - min) + min;
-  };
-
-  const randomPrise: number = parseInt(prise(24, 34).toFixed(0), 10);
-  const randomMinus: number = parseInt(prise(8, 15).toFixed(0), 10);
-
-  await db.ticTacToePlayGround.update({
-    where: {
-      id: params.gameId,
-    },
-    data: {
-      prise: randomPrise,
-      minus: randomMinus,
-    },
-  });
-
   return (
     <>
       <GameFiled
@@ -77,7 +60,11 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
         prise={existingTicTacToeGame.prise}
         minus={existingTicTacToeGame.minus}
       />
-      <CheckWin board={board} />
+      {/* <CheckWin
+        board={board}
+        players={ticTacToeGamePlayers?.players}
+        gameId={params.gameId}
+      /> */}
     </>
   );
 };

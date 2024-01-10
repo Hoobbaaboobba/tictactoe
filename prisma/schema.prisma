@@ -31,7 +31,7 @@ model TicTacToePlayGround {
   inviteCode String   @unique
   status     String   @default("ongoing")
   userId     String
-  board      String   @default("---------")
+  board      String   @default("         ")
   prise      Int      @default(0)
   minus      Int      @default(0)
   currentSymbol String @default("O")
