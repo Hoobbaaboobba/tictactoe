@@ -6,7 +6,6 @@ import { db } from "@/lib/db";
 import { currentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { Player } from "@prisma/client";
 
 export const startGame = async () => {
   try {
@@ -42,55 +41,12 @@ export const startGame = async () => {
   }
 };
 
-export const exitGame = async (
-  gameId: string,
-  players: Player[] | undefined
-) => {
+export const exitGame = async (gameId: string) => {
   try {
     const user = await currentUser();
 
     if (!user) {
       return null;
-    }
-
-    const existringTicTacToePlayground =
-      await db.ticTacToePlayGround.findUnique({
-        where: {
-          id: gameId,
-        },
-      });
-
-    if (!existringTicTacToePlayground) {
-      return redirect("/play");
-    }
-
-    if (players) {
-      await db.user.update({
-        where: {
-          id: players[0]?.userId,
-        },
-        data: {
-          points: {
-            increment: existringTicTacToePlayground?.prise,
-          },
-        },
-      });
-
-      const points =
-        (players[1].points || 0) < existringTicTacToePlayground?.minus
-          ? 0
-          : existringTicTacToePlayground.minus;
-
-      await db.user.update({
-        where: {
-          id: players[1]?.userId,
-        },
-        data: {
-          points: {
-            increment: points,
-          },
-        },
-      });
     }
 
     await db.ticTacToePlayGround.delete({

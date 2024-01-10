@@ -171,7 +171,7 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
     socket.emit("message", newArray);
     socket.emit("step", currentStep);
 
-    if (board) {
+    if (board && players) {
       if (
         (board[0] === "O" && board[1] === "O" && board[2] === "O") ||
         (board[3] === "O" && board[4] === "O" && board[5] === "O") ||
@@ -185,7 +185,9 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
         onEnd();
         onWinnerO();
 
-        await exitGame(gameId, players);
+        await incrementPoints(players[0].userId, gameId);
+        await decrementPoints(players[1].userId, gameId);
+        await exitGame(gameId);
       }
 
       if (
@@ -201,7 +203,9 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
         onEnd();
         onWinnerX();
 
-        await exitGame(gameId, players);
+        await incrementPoints(players[1].userId, gameId);
+        await decrementPoints(players[0].userId, gameId);
+        await exitGame(gameId);
       }
     }
 
