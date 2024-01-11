@@ -18,11 +18,10 @@ const ProgressBar = ({ user }: Props) => {
     return;
   }
 
+  const w = (user?.wins / user?.allGames) * 100;
+
   useEffect(() => {
-    const win = setTimeout(
-      () => setWins((user?.wins / user?.allGames) * 100),
-      300
-    );
+    const win = setTimeout(() => setWins(w), 300);
     const def = setTimeout(
       () => setDefeats((user?.defeats / user?.allGames) * 100),
       600
@@ -31,13 +30,10 @@ const ProgressBar = ({ user }: Props) => {
       () => setProcent((user?.wins / user.allGames) * 100),
       900
     );
-    const clearTimeouts = () => {
-      clearTimeout(win);
-      clearTimeout(def);
-      clearTimeout(proc);
+    return () => {
+      clearTimeout(win), clearTimeout(def), clearTimeout(proc);
     };
-    clearTimeouts();
-  });
+  }, [w]);
 
   return (
     <div className="flex w-full flex-col justify-start items-start gap-2">
@@ -47,7 +43,7 @@ const ProgressBar = ({ user }: Props) => {
           <Progress value={wins} className="rounded-md h-[40px] top-0 left-0" />
           <span
             className={`${
-              procent < 55 ? "text-black" : "text-white"
+              wins < 55 ? "text-black" : "text-white"
             } absolute bottom-2`}
           >
             {user?.wins}
@@ -68,7 +64,7 @@ const ProgressBar = ({ user }: Props) => {
           />
           <span
             className={`${
-              procent < 55 ? "text-black" : "text-white"
+              defeats < 55 ? "text-black" : "text-white"
             } absolute bottom-2`}
           >
             {user?.defeats}

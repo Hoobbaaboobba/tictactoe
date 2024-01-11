@@ -55,7 +55,7 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
       return redirect("/play");
     }
 
-    await db.user.update({
+    return db.user.update({
       where: {
         id: playerId,
       },
