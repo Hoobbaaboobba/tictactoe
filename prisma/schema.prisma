@@ -17,18 +17,21 @@ model User {
   password              String?
   points                Int?                   @default(0)
   role                  UserRole               @default(PLAYER)
+  wins                  Int                    @default(0)
+  defeats               Int                    @default(0)
+  allGames              Int                    @default(0)
   isTwoFactorEnabled    Boolean                @default(false)
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   accounts              Account[]
-  players               Player?
+  players               Player[]
   playgrounds           TicTacToePlayGround[]
   twoFactorConfirmation TwoFactorConfirmation?
 }
 
 model TicTacToePlayGround {
   id         String   @id @default(uuid())
-  inviteCode String   @unique
+  inviteCode String   @unique @default(uuid())
   status     String   @default("ongoing")
   userId     String
   board      String   @default("         ")

@@ -1,25 +1,25 @@
 "use client";
 
 import { Suspense, useEffect, useState, useTransition } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../ui/card";
 import { startGame } from "@/actions/startGame";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { ScaleLoader } from "react-spinners";
 import { Check, Copy, RotateCw } from "lucide-react";
-import Link from "next/link";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Label } from "./ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Label } from "../ui/label";
 import { Player } from "@prisma/client";
-import { Separator } from "./ui/separator";
 import { getTicTacToePlaygrounds } from "@/actions/getBoard";
+import GameCard from "./GameCard";
+import LoadingState from "../LoadingState";
+import { useRouter } from "next/navigation";
 
 interface Props {
   playGroundId: string | null;
@@ -82,6 +82,14 @@ const TicTacToePlayGround = ({
     setReload(false);
   };
 
+  const router = useRouter();
+
+  const handlePlay = () => {
+    startTransition(() => {
+      router.push(`/play/${playGroundId}`);
+    });
+  };
+
   return (
     <Tabs defaultValue="link" className="w-[400px] mt-6">
       <TabsList className="grid w-full grid-cols-2">
@@ -92,31 +100,13 @@ const TicTacToePlayGround = ({
         <div className="flex flex-col gap-4">
           {playgroundsData?.map((playground, index) => (
             <Suspense key={index} fallback={<ScaleLoader color="#000000" />}>
-              <Card>
-                <CardContent className="flex flex-col justify-center items-center py-2">
-                  <div className="">
-                    1 - {playground.players[0]?.name}{" "}
-                    <span className="text-green-600"> O</span>
-                  </div>
-                  {playground.players[1] && (
-                    <div>
-                      2 - {playground.players[1]?.name}{" "}
-                      <span className="text-rose-600">X</span>
-                    </div>
-                  )}
-                  <Separator className="my-2" />
-                  <div>{playground.players.length} / 2</div>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full" asChild>
-                    <Link
-                      href={`${process.env.NEXT_PUBLIC_APP_URL}/invite/${playground.inviteCode}`}
-                    >
-                      Играть
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
+              <GameCard
+                playground={{
+                  id: playground.id,
+                  inviteCode: playground.inviteCode,
+                  players: playground.players,
+                }}
+              />
             </Suspense>
           ))}
         </div>
@@ -175,8 +165,12 @@ const TicTacToePlayGround = ({
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full" asChild>
-                    <Link href={`/play/${playGroundId}`}>Играть</Link>
+                  <Button
+                    disabled={isPending}
+                    className="w-full"
+                    onClick={handlePlay}
+                  >
+                    {isPending ? <LoadingState /> : "Играть"}
                   </Button>
                 </CardFooter>
               </>
@@ -184,11 +178,7 @@ const TicTacToePlayGround = ({
             {!playGroundId && (
               <CardFooter>
                 <Button disabled={isPending} className="w-full">
-                  {isPending ? (
-                    <ScaleLoader color="#ffffff" height={20} width={3} />
-                  ) : (
-                    "Создать"
-                  )}
+                  {isPending ? <LoadingState /> : "Создать"}
                 </Button>
               </CardFooter>
             )}

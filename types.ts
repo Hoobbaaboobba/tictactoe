@@ -1,65 +1,85 @@
 import Stripe from "stripe";
-import {Server as NetServer, Socket} from 'net'
+import { Server as NetServer, Socket } from "net";
 import { NextApiResponse } from "next";
-import {Server as SocketIOServer} from 'socket.io'
+import { Server as SocketIOServer } from "socket.io";
 
 export type NextApiResponseServerIo = NextApiResponse & {
   socket: Socket & {
     server: NetServer & {
-      io: SocketIOServer
-    }
-  }
-}
+      io: SocketIOServer;
+    };
+  };
+};
 
-export interface UserDetails {
-  id: string;
-  first_name: string;
-  last_name: string;
-  full_name?: string;
-  avatar_url?: string;
-  billing_address?: Stripe.Address;
-  payment_method?: Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
-}
+export type UserRole = "PLAYER" | "ADMIN" | "GOD";
 
-export interface Product {
+export type User = {
   id: string;
-  active?: boolean;
   name?: string;
-  description?: string;
+  email?: string;
+  emailVerified: Date;
   image?: string;
-  metadata?: Stripe.Metadata;
-}
+  password: string;
+  points: number;
+  role: UserRole;
+  wins: number;
+  defeats: number;
+  isTwoFactorEnabled: boolean;
+  createdAt: Date;
+  updatedAtL: Date;
+  accounts: Account[];
+  players: Player[];
+  playgrounds: TicTacToePlayGround[];
+  twoFactorConfirmation?: TwoFactorConfirmation;
+};
 
-export interface Price {
+export type Account = {
   id: string;
-  product_id?: string;
-  active?: boolean;
-  description?: string;
-  unit_amount?: number;
-  currency?: string;
-  type?: Stripe.Price.Type;
-  interval?: Stripe.Price.Recurring.Interval;
-  interval_count?: number;
-  trial_period_days?: number | null;
-  metadata?: Stripe.Metadata;
-  products?: Product;
-}
+  userId: string;
+  type: string;
+  provider: string;
+  providerAccountId: string;
+  refresh_token?: string;
+  access_token?: string;
+  expires_at: number;
+  token_type?: string;
+  scope?: string;
+  id_token?: string;
+  session_state?: string;
+  user: User;
+};
 
-export interface Subscription {
+export type Player = {
+  symbol: string;
+  name?: string;
+  image?: string;
+  points?: number;
+  role: UserRole;
+  userId: string;
+  playGroundId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  playgrounds: TicTacToePlayGround;
+  user: User;
+};
+
+export type TicTacToePlayGround = {
   id: string;
-  user_id: string;
-  status?: Stripe.Subscription.Status;
-  metadata?: Stripe.Metadata;
-  price_id?: string;
-  quantity?: number;
-  cancel_at_period_end?: boolean;
-  created: string;
-  current_period_start: string;
-  current_period_end: string;
-  ended_at?: string;
-  cancel_at?: string;
-  canceled_at?: string;
-  trial_start?: string;
-  trial_end?: string;
-  prices?: Price;
-}
+  inviteCode: string;
+  status: string;
+  userId: string;
+  board: string;
+  prise: number;
+  minus: number;
+  currentSymbol: string;
+  created: Date;
+  updatedAt: Date;
+  players: Player[];
+  user: User;
+};
+
+export type TwoFactorConfirmation = {
+  id: string;
+  userId: string;
+  user: User;
+};

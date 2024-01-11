@@ -31,6 +31,7 @@ import DeleteRoomButton from "./DeleteRoomButton";
 import { setStep } from "@/actions/setStep";
 import useWinnderDialog from "@/hooks/useWinnerDialog";
 import { db } from "@/lib/db";
+import LoadingState from "../LoadingState";
 
 interface Props {
   players: Player[] | undefined;
@@ -47,7 +48,6 @@ export const GameFiled = ({
   currentSymbol,
   status,
 }: Props) => {
-  // const [socket, setSocket] = useState<any>(undefined);
   const [dialog, setDialog] = useState<boolean>(true);
   const [playersData, setPlayersData] = useState<Player[] | undefined>(players);
   const [isPending, startTransition] = useTransition();
@@ -171,12 +171,7 @@ export const GameFiled = ({
             className={`absolute w-full h-full flex justify-center items-end rounded-xl top-0 left-0 bg-black/25 dark:bg-black/75`}
           >
             <div className="flex gap-2 my-2 justify-center items-center">
-              <span className="dark:block hidden">
-                <ScaleLoader color="#ffffff" height={20} width={4} />
-              </span>{" "}
-              <span className="dark:hidden block">
-                <ScaleLoader color="#000000" height={20} width={4} />
-              </span>
+              <LoadingState />
             </div>
           </div>
         );
@@ -199,18 +194,7 @@ export const GameFiled = ({
               <DialogTitle className="text-3xl">Вступить в игру?</DialogTitle>
               <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
                 <Button onClick={reloadPlayers}>
-                  {isPending ? (
-                    <>
-                      <div className="dark:block hidden">
-                        <ScaleLoader color="#000000" height={20} width={4} />
-                      </div>
-                      <div className="dark:hidden block">
-                        <ScaleLoader color="#ffffff" height={20} width={4} />
-                      </div>
-                    </>
-                  ) : (
-                    "Да"
-                  )}
+                  {isPending ? <LoadingState /> : "Да"}
                 </Button>
                 <LeaveRoomButton gameId={gameId} />
               </DialogDescription>

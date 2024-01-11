@@ -23,6 +23,7 @@ import { login } from "@/actions/login";
 import { ScaleLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import LoadingState from "../LoadingState";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -151,9 +152,7 @@ export const LoginForm = () => {
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
             {isPending ? (
-              <div className="mt-1">
-                <ScaleLoader color="#ffffff" height={20} width={3} />
-              </div>
+              <LoadingState />
             ) : showTwoFactor ? (
               "Подтвердить"
             ) : (

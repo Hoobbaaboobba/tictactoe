@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { newVerification } from "@/actions/new-verification";
 import { FormSuccess } from "../FormSuccess";
 import { FormError } from "../FormError";
+import LoadingState from "../LoadingState";
 
 export const NewVerificationForm = () => {
   const [error, setError] = useState<string | undefined>();
@@ -48,16 +49,7 @@ export const NewVerificationForm = () => {
       backButtonLabel="Вернуться к верификации"
       backButtonHref="/auth/login"
     >
-      {!success && !error && (
-        <>
-          <div className="dark:flex hidden items-center w-full justify-center">
-            <ScaleLoader color="#ffffff" />
-          </div>{" "}
-          <div className="dark:hidden flex items-center w-full justify-center">
-            <ScaleLoader color="#000000" />
-          </div>{" "}
-        </>
-      )}
+      {!success && !error && <LoadingState />}
       <FormSuccess message={success} />
       {!success && <FormError message={error} />}
     </CardWrapper>

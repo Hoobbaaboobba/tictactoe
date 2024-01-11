@@ -22,6 +22,7 @@ import { FormSuccess } from "../FormSuccess";
 import { newPassword } from "@/actions/new-password";
 import { ScaleLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
+import LoadingState from "../LoadingState";
 
 export const NewPasswordForm = () => {
   const searchParams = useSearchParams();
@@ -81,13 +82,7 @@ export const NewPasswordForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
           <Button disabled={isPending} type="submit" className="w-full">
-            {isPending ? (
-              <div className="mt-1">
-                <ScaleLoader color="#ffffff" height={20} width={3} />
-              </div>
-            ) : (
-              "Новый пароль"
-            )}
+            {isPending ? <LoadingState /> : "Новый пароль"}
           </Button>
         </form>
       </Form>

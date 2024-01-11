@@ -63,6 +63,12 @@ export const incrementPoints = async (playerId: string, gameId: string) => {
         points: {
           increment: existringTicTacToePlayground?.prise,
         },
+        wins: {
+          increment: 1,
+        },
+        allGames: {
+          increment: 1,
+        },
       },
     });
   } catch {
@@ -99,7 +105,7 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
       (newUser?.points || 0) < existringTicTacToePlayground?.minus;
 
     if (points) {
-      await db.user.update({
+      return db.user.update({
         where: {
           id: playerId,
         },
@@ -107,18 +113,24 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
           points: 0,
         },
       });
-    }
-
-    await db.user.update({
-      where: {
-        id: playerId,
-      },
-      data: {
-        points: {
-          decrement: existringTicTacToePlayground?.minus,
+    } else {
+      return db.user.update({
+        where: {
+          id: playerId,
         },
-      },
-    });
+        data: {
+          points: {
+            decrement: existringTicTacToePlayground?.minus,
+          },
+          allGames: {
+            increment: 1,
+          },
+          defeats: {
+            increment: 1,
+          },
+        },
+      });
+    }
   } catch {
     return { error: "Что-то пошло не так!" };
   }

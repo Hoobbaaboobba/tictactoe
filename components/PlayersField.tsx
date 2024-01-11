@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { ScaleLoader } from "react-spinners";
 import { Crown, GraduationCap, TrophyIcon } from "lucide-react";
 import { Player } from "@prisma/client";
+import LoadingState from "./LoadingState";
 
 interface Props {
   players: Player[] | undefined;
@@ -77,7 +78,7 @@ const PlayersField = ({ players }: Props) => {
             </div>
           </>
         ) : (
-          <ScaleLoader color="#000000" height={20} width={4} />
+          <LoadingState />
         )}
       </div>
     </div>

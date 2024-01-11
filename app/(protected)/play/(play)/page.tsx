@@ -1,4 +1,4 @@
-import TicTacToePlayGround from "@/components/StartTicTacToe";
+import TicTacToePlayGround from "@/components/TicTacToeDrawer.tsx/StartTicTacToe";
 import {
   Card,
   CardContent,
