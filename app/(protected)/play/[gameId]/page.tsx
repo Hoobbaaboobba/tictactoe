@@ -51,6 +51,7 @@ const InviteCodePage = async ({ params }: InviteCodeProps) => {
         gameId={params.gameId}
         board={board}
         currentSymbol={currentStep}
+        status={existingTicTacToeGame.status}
       />
       <WinnderDialog
         players={ticTacToeGamePlayers?.players}

@@ -61,22 +61,17 @@ export const exitGame = async (gameId: string) => {
   }
 };
 
-export const leaveRoom = async (gameId: string, userId?: string) => {
+export const leaveRoom = async (gameId: string) => {
   try {
-    const user = currentUser();
+    const user = await currentUser();
 
     if (!user) {
       return null;
     }
 
-    await db.ticTacToePlayGround.delete({
+    await db.player.delete({
       where: {
-        id: gameId,
-        players: {
-          some: {
-            userId: userId,
-          },
-        },
+        userId: user.id,
       },
     });
 

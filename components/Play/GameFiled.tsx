@@ -30,15 +30,23 @@ import WinnderDialog from "./WinnderDialog";
 import DeleteRoomButton from "./DeleteRoomButton";
 import { setStep } from "@/actions/setStep";
 import useWinnderDialog from "@/hooks/useWinnerDialog";
+import { db } from "@/lib/db";
 
 interface Props {
   players: Player[] | undefined;
   gameId: string;
   board: string[] | undefined;
   currentSymbol: string;
+  status: string;
 }
 
-export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
+export const GameFiled = ({
+  players,
+  gameId,
+  board,
+  currentSymbol,
+  status,
+}: Props) => {
   // const [socket, setSocket] = useState<any>(undefined);
   const [dialog, setDialog] = useState<boolean>(true);
   const [playersData, setPlayersData] = useState<Player[] | undefined>(players);
@@ -183,7 +191,7 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
       return null;
     }
 
-    if (playersData[1]?.userId === user?.id) {
+    if (playersData[1]?.userId === user?.id && status === "ongoing") {
       return (
         <Dialog open={dialog}>
           <DialogContent className="w-[400px] rounded-md">
@@ -204,7 +212,7 @@ export const GameFiled = ({ players, gameId, board, currentSymbol }: Props) => {
                     "Да"
                   )}
                 </Button>
-                <Button variant="outline">Наблюдать</Button>
+                <LeaveRoomButton gameId={gameId} />
               </DialogDescription>
             </DialogHeader>
           </DialogContent>

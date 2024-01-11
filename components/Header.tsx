@@ -5,6 +5,7 @@ import { SocketIndicator } from "./providers/SocketIndicator";
 
 const Header = async () => {
   const user = await currentUser();
+
   return (
     <header className="w-full fixed z-50 dark:bg-slate-900 bg-white backdrop-blur-lg top-0 left flex justify-center items-center border-b shadow-sm">
       <div className="max-w-[1300px] w-full flex justify-between items-center p-4">

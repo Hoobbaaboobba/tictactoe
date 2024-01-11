@@ -21,6 +21,15 @@ export const getPlayers = async (gameid: string) => {
       },
     });
 
+    await db.ticTacToePlayGround.update({
+      where: {
+        id: gameid,
+      },
+      data: {
+        status: "start",
+      },
+    });
+
     return players?.players;
   } catch {
     return { error: "Что-то пошло не так!" };
