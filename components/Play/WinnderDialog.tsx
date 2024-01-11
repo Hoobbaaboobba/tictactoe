@@ -12,6 +12,11 @@ import Link from "next/link";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Button } from "../ui/button";
 import { TrophyIcon } from "lucide-react";
+import { useTransition } from "react";
+import { exitGame } from "@/actions/startGame";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import LoadingState from "../LoadingState";
 
 interface Props {
   players: Player[] | undefined;
@@ -22,8 +27,16 @@ interface Props {
 
 const WinnderDialog = ({ players, gameId, prise, minus }: Props) => {
   const { isEnd, winner } = useWinnderDialog();
+  const [isPending, startTransition] = useTransition();
 
   const user = useCurrentUser();
+
+  const handleExit = () => {
+    startTransition(async () => {
+      await exitGame(gameId);
+      redirect("/play");
+    });
+  };
 
   if (players) {
     if (winner === "O") {
@@ -43,9 +56,11 @@ const WinnderDialog = ({ players, gameId, prise, minus }: Props) => {
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>
                     </p> */}
-                    <Button asChild variant="destructive">
-                      <Link href="/play">Покинуть комнату</Link>
-                    </Button>
+                    <form action={handleExit}>
+                      <Button type="submit" variant="destructive">
+                        {isPending ? <LoadingState /> : "Покинуть комнату"}
+                      </Button>
+                    </form>
                   </div>
                 </DialogDescription>
               </>
@@ -62,9 +77,11 @@ const WinnderDialog = ({ players, gameId, prise, minus }: Props) => {
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>
                     </p> */}
-                    <Button asChild variant="destructive">
-                      <Link href="/play">Покинуть комнату</Link>
-                    </Button>
+                    <form action={handleExit}>
+                      <Button type="submit" variant="destructive">
+                        {isPending ? <LoadingState /> : "Покинуть комнату"}
+                      </Button>
+                    </form>
                   </div>
                 </DialogDescription>
               </>
@@ -91,9 +108,11 @@ const WinnderDialog = ({ players, gameId, prise, minus }: Props) => {
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>
                     </p> */}
-                    <Button asChild variant="destructive">
-                      <Link href="/play">Покинуть комнату</Link>
-                    </Button>
+                    <form action={handleExit}>
+                      <Button type="submit" variant="destructive">
+                        {isPending ? <LoadingState /> : "Покинуть комнату"}
+                      </Button>
+                    </form>
                   </div>
                 </DialogDescription>
               </>
@@ -110,9 +129,11 @@ const WinnderDialog = ({ players, gameId, prise, minus }: Props) => {
                     {/* <p className="text-slate-600 text-sm">
                       Игра закончится через: <span>{seconds}</span>
                     </p> */}
-                    <Button asChild variant="destructive">
-                      <Link href="/play">Покинуть комнату</Link>
-                    </Button>
+                    <form action={handleExit}>
+                      <Button type="submit" variant="destructive">
+                        {isPending ? <LoadingState /> : "Покинуть комнату"}
+                      </Button>
+                    </form>
                   </div>
                 </DialogDescription>
               </>
@@ -129,9 +150,11 @@ const WinnderDialog = ({ players, gameId, prise, minus }: Props) => {
             Ничья
           </DialogTitle>
           <DialogDescription className="w-full flex justify-center items-center py-2 gap-4">
-            <Button asChild variant="destructive">
-              <Link href="/play">Покинуть комнату</Link>
-            </Button>
+            <form action={handleExit}>
+              <Button type="submit" variant="destructive">
+                {isPending ? <LoadingState /> : "Покинуть комнату"}
+              </Button>
+            </form>
           </DialogDescription>
         </DialogContent>
       </Dialog>

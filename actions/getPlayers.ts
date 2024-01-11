@@ -84,11 +84,11 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
       return null;
     }
 
-    const newUser = await db.user.findUnique({
-      where: {
-        id: user.id,
-      },
-    });
+    // const newUser = await db.user.findUnique({
+    //   where: {
+    //     id: user.id,
+    //   },
+    // });
 
     const existringTicTacToePlayground =
       await db.ticTacToePlayGround.findUnique({
@@ -101,36 +101,38 @@ export const decrementPoints = async (playerId: string, gameId: string) => {
       return redirect("/play");
     }
 
-    const points: boolean =
-      (newUser?.points || 0) < existringTicTacToePlayground?.minus;
+    // const points: boolean =
+    //   (newUser?.points || 0) < existringTicTacToePlayground?.minus;
 
-    if (points) {
-      return db.user.update({
-        where: {
-          id: playerId,
+    // if (points) {
+    //   return db.user.update({
+    //     where: {
+    //       id: playerId,
+    //     },
+    //     data: {
+    //       points: 0,
+    //     },
+    //   });
+    // } else {
+
+    // }
+
+    return db.user.update({
+      where: {
+        id: playerId,
+      },
+      data: {
+        points: {
+          decrement: existringTicTacToePlayground?.minus,
         },
-        data: {
-          points: 0,
+        allGames: {
+          increment: 1,
         },
-      });
-    } else {
-      return db.user.update({
-        where: {
-          id: playerId,
+        defeats: {
+          increment: 1,
         },
-        data: {
-          points: {
-            decrement: existringTicTacToePlayground?.minus,
-          },
-          allGames: {
-            increment: 1,
-          },
-          defeats: {
-            increment: 1,
-          },
-        },
-      });
-    }
+      },
+    });
   } catch {
     return { error: "Что-то пошло не так!" };
   }

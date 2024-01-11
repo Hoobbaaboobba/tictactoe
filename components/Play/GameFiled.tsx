@@ -112,7 +112,6 @@ export const GameFiled = ({
           const endGame = async () => {
             await incrementPoints(players[0].userId, gameId);
             await decrementPoints(players[1].userId, gameId);
-            await exitGame(gameId);
             resetEnd();
             resetWinner();
           };
@@ -136,7 +135,6 @@ export const GameFiled = ({
           const endGame = async () => {
             await incrementPoints(players[1].userId, gameId);
             await decrementPoints(players[0].userId, gameId);
-            await exitGame(gameId);
             resetEnd();
             reloadPlayers();
           };

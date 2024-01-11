@@ -49,13 +49,11 @@ export const exitGame = async (gameId: string) => {
       return null;
     }
 
-    await db.ticTacToePlayGround.delete({
+    return await db.ticTacToePlayGround.delete({
       where: {
         id: gameId,
       },
     });
-
-    return revalidatePath(`/play/${gameId}`);
   } catch {
     return { error: "Что-то пошло не так!" };
   }

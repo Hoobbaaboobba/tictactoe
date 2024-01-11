@@ -43,7 +43,7 @@ const ProgressBar = ({ user }: Props) => {
           <Progress value={wins} className="rounded-md h-[40px] top-0 left-0" />
           <span
             className={`${
-              wins < 55 ? "text-black" : "text-white"
+              wins < 51 ? "text-black" : "text-white"
             } absolute bottom-2`}
           >
             {user?.wins}
@@ -64,7 +64,7 @@ const ProgressBar = ({ user }: Props) => {
           />
           <span
             className={`${
-              defeats < 55 ? "text-black" : "text-white"
+              defeats < 51 ? "text-black" : "text-white"
             } absolute bottom-2`}
           >
             {user?.defeats}
@@ -85,7 +85,7 @@ const ProgressBar = ({ user }: Props) => {
           />
           <span
             className={`${
-              procent < 55 ? "text-black" : "text-white"
+              procent < 51 ? "text-black" : "text-white"
             } absolute bottom-2`}
           >
             {procent.toFixed(0)}%
