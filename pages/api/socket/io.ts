@@ -3,7 +3,6 @@ import { NextApiRequest } from "next";
 import { Server as ServerIO } from "socket.io";
 
 import { NextApiResponseServerIo } from "@/types";
-import { ticTacToeRepository } from "@/components/Play/TicTacToeRepository/TicTacToeRepository";
 
 export const config = {
   api: {
@@ -24,8 +23,7 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
 
     io.on("connection", async (socket) => {
       socket.on("enter", (data) => {
-        socket.join(data.playGroundId);
-        io.emit("enter", ticTacToeRepository.getPlayers(data.playGroundId));
+        io.emit("enter", data);
       });
       socket.on("message", (data) => {
         io.emit("message", data);
